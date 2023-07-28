@@ -89,18 +89,14 @@ if __name__ == "__main__":
     if not os.path.exists("results"):
         os.mkdir("results")
 
-    # run_category(benchs[0], timeliness=True, overhead=True)
-    # run_category(benchs[2], timeliness=True, overhead=True)
-    # run_category(benchs[1], timeliness=True, overhead=True)
+    run_category(benchs[0], timeliness=True, overhead=True)
+    run_category(benchs[2], timeliness=True, overhead=True)
+    run_category(benchs[1], timeliness=True, overhead=True)
 
-    run_bench(benchs[1], "blackscholes", 0, "cache")
-
-
+    # run_bench(benchs[1], "blackscholes", 0, "cache")
     # run_bench(benchs[0], "radix", accuracy=0, pass_type="cache")
-
     # run_bench(benchs[0], "lu-nc", accuracy=0, pass_type="cache-line")
     # run_specific_bench("splash2/codes/", "fft")
-
     # run_splash_benchs(timeliness=False, overhead=True)
     # run_phoenix_benchs(timeliness=False, overhead=True)
     # run_parsec_benchs(timeliness=False, overhead=True)

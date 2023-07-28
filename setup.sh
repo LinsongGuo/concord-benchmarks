@@ -10,7 +10,8 @@ sudo apt-get install \
 	libglu1-mesa-dev \
 	libxi-dev \
 	libxmu-dev \
-	libtbb-dev
+	libtbb-dev \
+	libpng-dev \
 
 pip3 install -r requirements.txt
 
