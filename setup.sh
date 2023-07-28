@@ -12,6 +12,9 @@ sudo apt-get install \
 	libxmu-dev \
 	libtbb-dev \
 	libpng-dev \
+	libpapi-dev \
+	libpfm4-dev \
+	libpfm4 \
 
 pip3 install -r requirements.txt
 
