@@ -1,0 +1,9 @@
+results
+*.tar.gz
+*.csv
+!ci_published.csv
+*.bin
+*.out
+*.bc
+*.ll
+*.a

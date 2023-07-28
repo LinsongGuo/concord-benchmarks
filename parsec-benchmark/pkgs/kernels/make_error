@@ -1,0 +1,300 @@
+clang: warning: -lm: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lpapi: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lpfm: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lm: 'linker' input unused [-Wunused-command-line-argument]
+In file included from annealer_thread.cpp:34:
+In file included from ./annealer_thread.h:43:
+In file included from ./rng.h:39:
+./MersenneTwister.h:187:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 s1;
+        ^~~~~~~~~
+./MersenneTwister.h:232:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = 1;
+        ^~~~~~~~~
+./MersenneTwister.h:233:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 j = 0;
+        ^~~~~~~~~
+./MersenneTwister.h:234:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int k = ( N > seedLength ? N : seedLength );
+        ^~~~~~~~~
+./MersenneTwister.h:269:3: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+                register uint32 *s = bigSeed;
+                ^~~~~~~~~
+./MersenneTwister.h:270:3: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+                register int i = N;
+                ^~~~~~~~~
+./MersenneTwister.h:271:3: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+                register bool success = true;
+                ^~~~~~~~~
+./MersenneTwister.h:289:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *s = state;
+        ^~~~~~~~~
+./MersenneTwister.h:290:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *r = state;
+        ^~~~~~~~~
+./MersenneTwister.h:291:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = 1;
+        ^~~~~~~~~
+./MersenneTwister.h:305:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *p = state;
+        ^~~~~~~~~
+./MersenneTwister.h:306:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i;
+        ^~~~~~~~~
+./MersenneTwister.h:345:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *sa = saveArray;
+        ^~~~~~~~~
+./MersenneTwister.h:346:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register const uint32 *s = state;
+        ^~~~~~~~~
+./MersenneTwister.h:347:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = N;
+        ^~~~~~~~~
+./MersenneTwister.h:355:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *s = state;
+        ^~~~~~~~~
+./MersenneTwister.h:356:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *la = loadArray;
+        ^~~~~~~~~
+./MersenneTwister.h:357:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = N;
+        ^~~~~~~~~
+./MersenneTwister.h:366:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register const MTRand::uint32 *s = mtrand.state;
+        ^~~~~~~~~
+./MersenneTwister.h:367:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = mtrand.N;
+        ^~~~~~~~~
+./MersenneTwister.h:375:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register MTRand::uint32 *s = mtrand.state;
+        ^~~~~~~~~
+./MersenneTwister.h:376:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = mtrand.N;
+        ^~~~~~~~~
+22 warnings generated.
+clang: warning: -lm: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lpapi: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lpfm: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lm: 'linker' input unused [-Wunused-command-line-argument]
+In file included from netlist.cpp:33:
+In file included from ./rng.h:39:
+./MersenneTwister.h:187:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 s1;
+        ^~~~~~~~~
+./MersenneTwister.h:232:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = 1;
+        ^~~~~~~~~
+./MersenneTwister.h:233:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 j = 0;
+        ^~~~~~~~~
+./MersenneTwister.h:234:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int k = ( N > seedLength ? N : seedLength );
+        ^~~~~~~~~
+./MersenneTwister.h:269:3: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+                register uint32 *s = bigSeed;
+                ^~~~~~~~~
+./MersenneTwister.h:270:3: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+                register int i = N;
+                ^~~~~~~~~
+./MersenneTwister.h:271:3: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+                register bool success = true;
+                ^~~~~~~~~
+./MersenneTwister.h:289:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *s = state;
+        ^~~~~~~~~
+./MersenneTwister.h:290:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *r = state;
+        ^~~~~~~~~
+./MersenneTwister.h:291:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = 1;
+        ^~~~~~~~~
+./MersenneTwister.h:305:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *p = state;
+        ^~~~~~~~~
+./MersenneTwister.h:306:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i;
+        ^~~~~~~~~
+./MersenneTwister.h:345:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *sa = saveArray;
+        ^~~~~~~~~
+./MersenneTwister.h:346:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register const uint32 *s = state;
+        ^~~~~~~~~
+./MersenneTwister.h:347:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = N;
+        ^~~~~~~~~
+./MersenneTwister.h:355:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *s = state;
+        ^~~~~~~~~
+./MersenneTwister.h:356:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *la = loadArray;
+        ^~~~~~~~~
+./MersenneTwister.h:357:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = N;
+        ^~~~~~~~~
+./MersenneTwister.h:366:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register const MTRand::uint32 *s = mtrand.state;
+        ^~~~~~~~~
+./MersenneTwister.h:367:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = mtrand.N;
+        ^~~~~~~~~
+./MersenneTwister.h:375:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register MTRand::uint32 *s = mtrand.state;
+        ^~~~~~~~~
+./MersenneTwister.h:376:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = mtrand.N;
+        ^~~~~~~~~
+22 warnings generated.
+clang: warning: -lm: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lpapi: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lpfm: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lm: 'linker' input unused [-Wunused-command-line-argument]
+In file included from rng.cpp:30:
+In file included from ./rng.h:39:
+./MersenneTwister.h:187:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 s1;
+        ^~~~~~~~~
+./MersenneTwister.h:232:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = 1;
+        ^~~~~~~~~
+./MersenneTwister.h:233:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 j = 0;
+        ^~~~~~~~~
+./MersenneTwister.h:234:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int k = ( N > seedLength ? N : seedLength );
+        ^~~~~~~~~
+./MersenneTwister.h:269:3: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+                register uint32 *s = bigSeed;
+                ^~~~~~~~~
+./MersenneTwister.h:270:3: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+                register int i = N;
+                ^~~~~~~~~
+./MersenneTwister.h:271:3: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+                register bool success = true;
+                ^~~~~~~~~
+./MersenneTwister.h:289:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *s = state;
+        ^~~~~~~~~
+./MersenneTwister.h:290:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *r = state;
+        ^~~~~~~~~
+./MersenneTwister.h:291:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = 1;
+        ^~~~~~~~~
+./MersenneTwister.h:305:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *p = state;
+        ^~~~~~~~~
+./MersenneTwister.h:306:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i;
+        ^~~~~~~~~
+./MersenneTwister.h:345:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *sa = saveArray;
+        ^~~~~~~~~
+./MersenneTwister.h:346:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register const uint32 *s = state;
+        ^~~~~~~~~
+./MersenneTwister.h:347:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = N;
+        ^~~~~~~~~
+./MersenneTwister.h:355:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *s = state;
+        ^~~~~~~~~
+./MersenneTwister.h:356:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *la = loadArray;
+        ^~~~~~~~~
+./MersenneTwister.h:357:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = N;
+        ^~~~~~~~~
+./MersenneTwister.h:366:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register const MTRand::uint32 *s = mtrand.state;
+        ^~~~~~~~~
+./MersenneTwister.h:367:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = mtrand.N;
+        ^~~~~~~~~
+./MersenneTwister.h:375:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register MTRand::uint32 *s = mtrand.state;
+        ^~~~~~~~~
+./MersenneTwister.h:376:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = mtrand.N;
+        ^~~~~~~~~
+22 warnings generated.
+clang: warning: -lm: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lpapi: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lpfm: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lm: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lm: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lpapi: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lpfm: 'linker' input unused [-Wunused-command-line-argument]
+clang: warning: -lm: 'linker' input unused [-Wunused-command-line-argument]
+In file included from main.cpp:46:
+In file included from ./annealer_thread.h:43:
+In file included from ./rng.h:39:
+./MersenneTwister.h:187:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 s1;
+        ^~~~~~~~~
+./MersenneTwister.h:232:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = 1;
+        ^~~~~~~~~
+./MersenneTwister.h:233:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 j = 0;
+        ^~~~~~~~~
+./MersenneTwister.h:234:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int k = ( N > seedLength ? N : seedLength );
+        ^~~~~~~~~
+./MersenneTwister.h:269:3: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+                register uint32 *s = bigSeed;
+                ^~~~~~~~~
+./MersenneTwister.h:270:3: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+                register int i = N;
+                ^~~~~~~~~
+./MersenneTwister.h:271:3: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+                register bool success = true;
+                ^~~~~~~~~
+./MersenneTwister.h:289:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *s = state;
+        ^~~~~~~~~
+./MersenneTwister.h:290:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *r = state;
+        ^~~~~~~~~
+./MersenneTwister.h:291:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = 1;
+        ^~~~~~~~~
+./MersenneTwister.h:305:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *p = state;
+        ^~~~~~~~~
+./MersenneTwister.h:306:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i;
+        ^~~~~~~~~
+./MersenneTwister.h:345:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *sa = saveArray;
+        ^~~~~~~~~
+./MersenneTwister.h:346:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register const uint32 *s = state;
+        ^~~~~~~~~
+./MersenneTwister.h:347:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = N;
+        ^~~~~~~~~
+./MersenneTwister.h:355:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *s = state;
+        ^~~~~~~~~
+./MersenneTwister.h:356:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register uint32 *la = loadArray;
+        ^~~~~~~~~
+./MersenneTwister.h:357:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = N;
+        ^~~~~~~~~
+./MersenneTwister.h:366:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register const MTRand::uint32 *s = mtrand.state;
+        ^~~~~~~~~
+./MersenneTwister.h:367:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = mtrand.N;
+        ^~~~~~~~~
+./MersenneTwister.h:375:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register MTRand::uint32 *s = mtrand.state;
+        ^~~~~~~~~
+./MersenneTwister.h:376:2: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+        register int i = mtrand.N;
+        ^~~~~~~~~
+22 warnings generated.
+clang: warning: argument unused during compilation: '-I /home/m8/clean-concord/benchmarks/experiments/overhead/parsec-benchmark/pkgs/kernels/../../../../..//src' [-Wunused-command-line-argument]
+clang: warning: argument unused during compilation: '-I /home/m8/clean-concord/benchmarks/experiments/overhead/parsec-benchmark/pkgs/kernels/../../../' [-Wunused-command-line-argument]

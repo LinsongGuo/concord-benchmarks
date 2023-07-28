@@ -1,0 +1,89 @@
+
+# ==== CONCORD Start ====
+ifeq ($(ACCURACY_TEST), 0) 
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord.a
+else
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.a
+endif
+
+MODIFIED_SUBLOOP_COUNT ?= 200
+DISABLE_BOUNDED_LOOP ?= 0
+
+ifeq ($(CONCORD_PASS_TYPE),rdtsc)
+$(info Building with rdtsc pass)
+CONCORD_PASS = ${CONCORD_SRC_PATH}/rdtsc-pass/build/src/libConcordPass.so
+else
+$(info Building with cache line pass)
+CONCORD_PASS = ${CONCORD_SRC_PATH}/cache-line-pass/build/src/libConcordPass.so
+endif
+
+CONCORD_PASS_OPT = -S -load $(CONCORD_PASS) -yield -modified_subloops $(MODIFIED_SUBLOOP_COUNT) -disable_bounded_loops $(DISABLE_BOUNDED_LOOP)
+# ==== CONCORD End ====
+
+UNROLL_COUNT ?= 0
+
+ifeq ($(UNROLL_COUNT), 0)
+export OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
+else
+export OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution -loop-unroll -unroll-allow-partial -unroll-count=$(UNROLL_COUNT)
+endif
+
+
+EXTRA_FLAGS ?= -DAVG_STATS
+CFLAGS := -O3 -pthread -D_POSIX_C_SOURCE=200112 -integrated-as -msoft-float -D_GNU_SOURCE
+CFLAGS += -Wall -W -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls -Wdisabled-optimization
+CFLAGS += -Wpadded -Winline -Wpointer-arith -Wsign-compare -Wendif-labels
+CFLAGS += $(EXTRA_FLAGS)
+CFLAGS +=  -I../../ -I../../../
+LDFLAGS := -lm -lpapi -lpfm $(CONCORD_LIB)
+
+#************************************ Export variables **********************************#
+export MACRO_NAME = c.m4.null
+export CC := clang 
+export M4 := m4 -s -Ulen -Uindex
+export CFLAGS
+export LDFLAGS
+SUFFIX := lc
+
+
+#disable-verify
+export LC_FLAGS = $(CONCORD_PASS_OPT)
+
+# Turn off if error needs to be seen on screen
+BUILD_LOG ?= make_log
+ERROR_LOG ?= make_error
+REDIRECT ?= >> $(BUILD_LOG) 2>>$(ERROR_LOG)
+
+APPS :=  radix fft lu-c lu-nc cholesky
+
+.PHONY: $(APPS) 
+
+default: all
+
+all: $(APPS)
+
+radix fft cholesky: 
+	@$(MAKE) -C $@ -f Makefile.int $@-$(SUFFIX) --no-print-directory  $(REDIRECT)
+
+lu-c: 
+	@$(MAKE) -C lu/contiguous_blocks -f Makefile.int $@-$(SUFFIX) --no-print-directory $(REDIRECT)
+
+lu-nc: 
+	@$(MAKE) -C lu/non_contiguous_blocks -f Makefile.int $@-$(SUFFIX) --no-print-directory $(REDIRECT)
+
+clean: radix-clean fft-clean lu-c-clean lu-nc-clean cholesky-clean
+
+radix-clean:
+	@$(MAKE) -C radix clean-radix-$(SUFFIX) -f Makefile.int --no-print-directory 
+
+fft-clean:
+	@$(MAKE) -C fft clean-fft-$(SUFFIX) -f Makefile.int --no-print-directory 
+
+lu-c-clean:
+	@$(MAKE) -C lu/contiguous_blocks clean-lu-c-$(SUFFIX) -f Makefile.int --no-print-directory 
+
+lu-nc-clean:
+	@$(MAKE) -C lu/non_contiguous_blocks clean-lu-nc-$(SUFFIX) -f Makefile.int --no-print-directory 
+
+cholesky-clean:
+	@$(MAKE) -C cholesky clean-cholesky-$(SUFFIX) -f Makefile.int --no-print-directory 

@@ -1,0 +1,16 @@
+SRC_DIR := .
+OBJ_DIR := .
+ROOT := ../../../../..
+BASEDIR := $(ROOT)/splash2/codes/
+MACROS := $(BASEDIR)/null_macros/$(MACRO_NAME)
+
+SRC_FILES_H := $(wildcard $(SRC_DIR)/*.H)
+SRC_FILES_C := $(wildcard $(SRC_DIR)/*.C)
+HDR_FILES := $(patsubst $(SRC_DIR)/%.H, $(SRC_DIR)/%.h, $(SRC_FILES_H))
+SRC_FILES := $(patsubst $(SRC_DIR)/%.C, $(SRC_DIR)/%.c, $(SRC_FILES_C))
+INTERMEDIATE_FILES := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/llvm_%.ll, $(SRC_FILES))
+
+TARGET_NAME := ocean-cp
+OBJS = jacobcalc.o jacobcalc2.o laplacalc.o linkup.o main.o multi.o slave1.o slave2.o subblock.o
+
+include ../../Defines.mk

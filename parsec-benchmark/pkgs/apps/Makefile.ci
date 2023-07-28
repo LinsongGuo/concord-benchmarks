@@ -1,0 +1,80 @@
+MODIFIED_SUBLOOP_COUNT ?= 200
+DISABLE_BOUNDED_LOOP ?= 1
+
+# ==== CONCORD Start ====
+ifeq ($(ACCURACY_TEST), 0) 
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord.o
+else
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.o
+endif
+
+ifeq ($(CONCORD_PASS_TYPE),rdtsc)
+$(info Building with rdtsc pass)
+CONCORD_PASS = ${CONCORD_SRC_PATH}/rdtsc-pass/build/src/libConcordPass.so
+else
+$(info Building with cache line pass)
+CONCORD_PASS = ${CONCORD_SRC_PATH}/cache-line-pass/build/src/libConcordPass.so
+endif
+
+CONCORD_PASS_OPT = -S -load $(CONCORD_PASS) -yield -modified_subloops $(MODIFIED_SUBLOOP_COUNT) -disable_bounded_loops $(DISABLE_BOUNDED_LOOP)
+# ==== CONCORD End ====
+
+CXXFLAGS += -I../../../ -I../
+LDFLAGS += -lm -lpapi -lpfm $(CONCORD_LIB)
+
+#************************************ Export variables **********************************#
+export CONFIG_FILE 	= $(LLVM_SRC_PATH)/test-suite/lc-config.txt
+export MACRO_NAME = c.m4.null
+export MACROS = $(shell pwd)/../null_macros/$(MACRO_NAME)
+export M4 := m4 #-s -Ulen -Uindex
+export LDFLAGS
+export CXXFLAGS
+SUFFIX := ci
+
+
+#disable-verify
+export CI_PASS_OPT = $(CONCORD_PASS_OPT)
+
+UNROLL_COUNT ?= 0
+
+ifeq ($(UNROLL_COUNT), 0)
+$(info Unrolling disabled)
+export OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
+else
+$(info Unrolling by $(UNROLL_COUNT))
+export OPT_FLAGS = -loop-unroll -unroll-allow-partial -unroll-count=$(UNROLL_COUNT) -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution 
+endif
+
+
+# Turn off if error needs to be seen on screen
+# BUILD_LOG ?= make_log
+# ERROR_LOG ?= make_error
+# REDIRECT ?= >> $(BUILD_LOG) 2>>$(ERROR_LOG)
+
+.PHONY: blackscholes fluidanimate swaptions 
+
+default: all
+
+all: blackscholes fluidanimate swaptions  
+
+blackscholes: $(CI_LIB) 
+	@$(MAKE) -C $@/src -f Makefile.$(SUFFIX) $@_$(SUFFIX) --no-print-directory $(REDIRECT)
+
+fluidanimate: $(CI_LIB) 
+	@$(MAKE) -C $@/src -f Makefile.$(SUFFIX) $@_$(SUFFIX) --no-print-directory $(REDIRECT)
+
+swaptions: $(CI_LIB) 
+	@$(MAKE) -C $@/src -f Makefile.$(SUFFIX) $@_$(SUFFIX) --no-print-directory $(REDIRECT)
+
+
+clean: blackscholes-clean fluidanimate-clean swaptions-clean  
+
+blackscholes-clean:
+	@$(MAKE) -C blackscholes/src clean -f Makefile.$(SUFFIX) --no-print-directory $(REDIRECT)
+
+fluidanimate-clean:
+	@$(MAKE) -C fluidanimate/src clean -f Makefile.$(SUFFIX) --no-print-directory $(REDIRECT)
+
+swaptions-clean:
+	@$(MAKE) -C swaptions/src clean -f Makefile.$(SUFFIX) --no-print-directory $(REDIRECT)
+
