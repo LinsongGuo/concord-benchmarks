@@ -13,11 +13,12 @@ benchs = [
         "path": "splash2/codes/",
         "benchs": ["water-nsquared", "water-spatial", "fmm", "raytrace", "radix", "fft", "lu-c", "lu-nc", "ocean-cp", "ocean-ncp", "volrend"]
     },
-    {
-        "name": "parsec",
-        "path": "parsec-benchmark/pkgs/",
-        "benchs": ["blackscholes", "fluidanimate", "swaptions", "canneal", "streamcluster", "dedup"]
-    },
+    # Commenting out since parsec benchmarks are no longer available at official mirror
+    # {
+    #     "name": "parsec",
+    #     "path": "parsec-benchmark/pkgs/",
+    #     "benchs": ["blackscholes", "fluidanimate", "swaptions", "canneal", "streamcluster", "dedup"]
+    # },
     {
         "name": "phoenix",
         "path": "phoenix/phoenix-2.0/",
@@ -70,7 +71,7 @@ def run_category(bench_category, timeliness=False, overhead=True):
     if timeliness:
         for bench in bench_category["benchs"]:
             print("Running", bench)
-            run_bench(bench_category, bench, accuracy=1, pass_type="rdtsc")
+            run_bench(bench_category, bench, accuracy=1, pass_type="cache")
     
     if overhead:
         for bench in bench_category["benchs"]:
@@ -90,13 +91,4 @@ if __name__ == "__main__":
         os.mkdir("results")
 
     run_category(benchs[0], timeliness=True, overhead=True)
-    run_category(benchs[2], timeliness=True, overhead=True)
     run_category(benchs[1], timeliness=True, overhead=True)
-
-    # run_bench(benchs[1], "blackscholes", 0, "cache")
-    # run_bench(benchs[0], "radix", accuracy=0, pass_type="cache")
-    # run_bench(benchs[0], "lu-nc", accuracy=0, pass_type="cache-line")
-    # run_specific_bench("splash2/codes/", "fft")
-    # run_splash_benchs(timeliness=False, overhead=True)
-    # run_phoenix_benchs(timeliness=False, overhead=True)
-    # run_parsec_benchs(timeliness=False, overhead=True)

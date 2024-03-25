@@ -35,8 +35,8 @@ tar -xzf reverse_index.tar.gz
 tar -xzf string_match.tar.gz
 popd
 
-
-pushd parsec-benchmark
-./setup.sh
-popd
+# Commenting out since parsec benchmarks are no longer publicly available
+# pushd parsec-benchmark
+# 	./setup.sh
+# popd
 
