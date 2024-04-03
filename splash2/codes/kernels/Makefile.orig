@@ -7,6 +7,8 @@ CFLAGS := $(CFLAGS) -Wpadded -Winline -Wpointer-arith -Wsign-compare -Wendif-lab
 CFLAGS := $(CFLAGS) $(EXTRA_FLAGS) -I$(CI_LIB_HOME)/src -I$(CI_HOME)
 LDFLAGS := -lm -static -lpapi -lpfm
 
+export OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution 
+
 #************************************ Export variables **********************************#
 export LLVM_BUILD ?= /mnt/nilanjana
 export MACRO_NAME = c.m4.null

@@ -47,9 +47,9 @@ endif
 
 
 # Turn off if error needs to be seen on screen
-# BUILD_LOG ?= make_log
-# ERROR_LOG ?= make_error
-# REDIRECT ?= >> $(BUILD_LOG) 2>>$(ERROR_LOG)
+BUILD_LOG ?= make_log
+ERROR_LOG ?= make_error
+REDIRECT ?= >> $(BUILD_LOG) 2>>$(ERROR_LOG)
 
 .PHONY: blackscholes fluidanimate swaptions 
 

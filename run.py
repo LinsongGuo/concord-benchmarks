@@ -6,23 +6,27 @@ import re
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 unroll_configs = {}
-overhead_results = "overhead_results.txt"
+overhead_results = "overhead_results-config-default.txt"
+# overhead_results = "overhead_results-config-default-origflags.txt"
+# overhead_results = "overhead_results-config-default-nodispatcher-origflags.txt"
 benchs = [
     {
         "name": "splash2",
         "path": "splash2/codes/",
-        "benchs": ["water-nsquared", "water-spatial", "fmm", "raytrace", "radix", "fft", "lu-c", "lu-nc", "ocean-cp", "ocean-ncp", "volrend"]
+        # "benchs": [ "raytrace"]
+        "benchs": ["water-nsquared", "water-spatial", "ocean-cp", "ocean-ncp", "volrend", "fmm", "raytrace", "radix", "fft", "lu-c", "lu-nc", "cholesky", "radiosity"]
     },
-    # Commenting out since parsec benchmarks are no longer available at official mirror
-    # {
-    #     "name": "parsec",
-    #     "path": "parsec-benchmark/pkgs/",
-    #     "benchs": ["blackscholes", "fluidanimate", "swaptions", "canneal", "streamcluster", "dedup"]
-    # },
     {
         "name": "phoenix",
         "path": "phoenix/phoenix-2.0/",
-        "benchs": ["histogram", "kmeans", "pca", "string_match", "linear_regression", "word_count"]
+        # "benchs": [ "matrix_multiply"]
+        "benchs": ["histogram", "kmeans", "pca", "string_match", "linear_regression", "word_count", "matrix_multiply", "reverse_index"]
+    },
+    {
+        "name": "parsec",
+        "path": "parsec-benchmark/pkgs/",
+        # "benchs": [ "fluidanimate"]
+        "benchs": ["blackscholes", "fluidanimate", "swaptions", "canneal", "streamcluster", "dedup"]
     }
 ]
 
@@ -39,7 +43,7 @@ def run_bench(bench_category, bench_name, accuracy=0, pass_type="cache"):
 
     os.chdir(os.path.join(SCRIPT_DIR, bench_category["path"]))
 
-    cmd = f" RUNS={1 if accuracy else 3 } \
+    cmd = f" RUNS={1 if accuracy else 1 } \
                                         MODIFIED_SUBLOOP_COUNT={int(unroll_configs[bench_name][1])} \
                                         UNROLL_COUNT={int(unroll_configs[bench_name][0])} \
                                         ACCURACY_TEST={accuracy} CONCORD_PASS_TYPE={pass_type} \
@@ -90,5 +94,6 @@ if __name__ == "__main__":
     if not os.path.exists("results"):
         os.mkdir("results")
 
-    run_category(benchs[0], timeliness=True, overhead=True)
-    run_category(benchs[1], timeliness=True, overhead=True)
+    run_category(benchs[0], timeliness=False, overhead=True)
+    run_category(benchs[1], timeliness=False, overhead=True)
+    run_category(benchs[2], timeliness=False, overhead=True)

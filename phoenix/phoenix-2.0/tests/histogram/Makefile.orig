@@ -47,7 +47,7 @@ $(HIST_OBJS): opt_histogram.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
 opt_histogram.ll: llvm_histogram.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 
 histogram-seq: $(HIST_SEQ_OBJS)
@@ -57,7 +57,7 @@ $(HIST_SEQ_OBJS): opt_histogram-seq.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
 opt_histogram-seq.ll: llvm_histogram-seq.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 
 histogram-pthread: $(HIST_PTHREAD_OBJS)
@@ -67,11 +67,11 @@ $(HIST_PTHREAD_OBJS): opt_histogram-pthread.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
 opt_histogram-pthread.ll: llvm_histogram-pthread.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 
 $(INTERMEDIATE_FILES): llvm_%.ll : %.c
-	clang-9 -S -emit-llvm $(CFLAGS) -I$(HOME)/$(INC_DIR) -o $@ $<
+	$(CC) -S -emit-llvm $(CFLAGS) -I$(HOME)/$(INC_DIR) -o $@ $<
 
 
 clean:

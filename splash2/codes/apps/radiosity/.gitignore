@@ -1,0 +1,4 @@
+*.o
+*.ll
+radiosity-lc
+radiosity-orig

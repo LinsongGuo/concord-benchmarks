@@ -76,7 +76,7 @@ endif
 CI_LIB_HOME = $(shell pwd)/../../../../../../#w.r.t src directory
 CI_HOME = $(shell pwd)/../../../../ #w.r.t src directory
 
-LLVM_BUILD ?= /mnt/nilanjana
+LLVM_BUILD = /usr
 
 PATH_OUT = ./$(OSTYPE)/
 

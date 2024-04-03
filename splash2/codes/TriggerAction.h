@@ -110,7 +110,8 @@ static void pin_thread(unsigned long th_id) {
   cpu_set_t cpuset;
   int max_cpus_to_use = MAX_CPU;
   CPU_ZERO(&cpuset);
-  int cpu = th_id % (max_cpus_to_use-1);
+  // int cpu = th_id % (max_cpus_to_use-1);
+  int cpu = 4;
   CPU_SET(cpu, &cpuset);
   pthread_t thread = pthread_self();
   printf("Pinning thread %d to cpu %d\n", th_id, cpu);

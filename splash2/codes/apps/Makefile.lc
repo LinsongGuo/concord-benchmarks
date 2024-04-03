@@ -64,33 +64,33 @@ default: all
 all: water-nsquared water-spatial ocean-cp ocean-ncp barnes volrend fmm raytrace radiosity
 
 water-nsquared: 
-	@$(MAKE) -C $@ -f Makefile.int $@-$(SUFFIX) --no-print-directory 
+	@$(MAKE) -C $@ -f Makefile.int $@-$(SUFFIX) --no-print-directory $(REDIRECT)
 
 water-spatial: 
-	@$(MAKE) -C $@ -f Makefile.int $@-$(SUFFIX) --no-print-directory 
+	@$(MAKE) -C $@ -f Makefile.int $@-$(SUFFIX) --no-print-directory $(REDIRECT)
 
 ocean-cp: 
-	@$(MAKE) -C ocean/contiguous_partitions -f Makefile.int $@-$(SUFFIX) --no-print-directory 
+	@$(MAKE) -C ocean/contiguous_partitions -f Makefile.int $@-$(SUFFIX) --no-print-directory $(REDIRECT)
 
 ocean-ncp: 
-	@$(MAKE) -C ocean/non_contiguous_partitions -f Makefile.int  $@-$(SUFFIX) --no-print-directory
+	@$(MAKE) -C ocean/non_contiguous_partitions -f Makefile.int  $@-$(SUFFIX) --no-print-directory $(REDIRECT)
 
 barnes: 
-	@$(MAKE) -C $@ -f Makefile.int $@-$(SUFFIX) --no-print-directory 
+	@$(MAKE) -C $@ -f Makefile.int $@-$(SUFFIX) --no-print-directory $(REDIRECT)
 
 volrend: 
-	@$(MAKE) -C $@ -f Makefile.int $@-$(SUFFIX) --no-print-directory 
+	@$(MAKE) -C $@ -f Makefile.int $@-$(SUFFIX) --no-print-directory $(REDIRECT)
 
 fmm: 
-	@$(MAKE) -C $@ -f Makefile.int $@-$(SUFFIX) --no-print-directory 
+	@$(MAKE) -C $@ -f Makefile.int $@-$(SUFFIX) --no-print-directory $(REDIRECT)
 
 raytrace: 
-	@$(MAKE) -C $@ -f Makefile.int $@-$(SUFFIX) --no-print-directory 
+	@$(MAKE) -C $@ -f Makefile.int $@-$(SUFFIX) --no-print-directory $(REDIRECT)
 
 radiosity: 
-	@$(MAKE) -C $@/glibdumb --no-print-directory 
-	@$(MAKE) -C $@/glibps --no-print-directory 
-	@$(MAKE) -C $@ -f Makefile.int $@-lc $@-$(SUFFIX) --no-print-directory 
+	@$(MAKE) -C $@/glibdumb --no-print-directory $(REDIRECT)
+	@$(MAKE) -C $@/glibps --no-print-directory $(REDIRECT)
+	@$(MAKE) -C $@ -f Makefile.int $@-lc $@-$(SUFFIX) --no-print-directory $(REDIRECT)
 
 
 clean: water-nsquared-clean water-spatial-clean ocean-cp-clean ocean-ncp-clean barnes-clean volrend-clean fmm-clean raytrace-clean radiosity-clean

@@ -40,3 +40,16 @@ pkgs/kernels/canneal/inputs/2500000.nets
 pkgs/apps/*/inputs/
 pkgs/kernels/*/inputs/
 pkgs/old
+
+blackscholes_ci
+blackscholes_llvm
+fluidanimate_ci
+fluidanimate_llvm
+swaptions_ci
+swaptions_llvm
+canneal_ci
+canneal_llvm
+dedup_ci
+dedup_llvm
+streamcluster_ci
+streamcluster_llvm

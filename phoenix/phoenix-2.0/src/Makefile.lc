@@ -46,7 +46,7 @@ $(LIB_PHOENIX).so: lc_all.o
 	$(CC) --shared -o $@ $<
 
 lc_all.o: lc_all.ll
-	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj $<
+	$(CNC_LLC) -relocation-model=pic -filetype=obj $<
 
 lc_all.ll: opt_all.ll
 	echo "COST_FILE_PATH $(COST_FILE_PATH)"

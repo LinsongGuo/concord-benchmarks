@@ -83,7 +83,7 @@ $(STR_MATCH_OBJS): opt_string_match.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
 opt_string_match.ll: llvm_string_match.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 
 string_match-seq: $(STR_MATCH_SEQ_OBJS)
@@ -93,7 +93,7 @@ $(STR_MATCH_SEQ_OBJS): opt_string_match-seq.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
 opt_string_match-seq.ll: llvm_string_match-seq.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 	
 string_match-pthread: $(STR_MATCH_PTHREAD_OBJS)
@@ -103,11 +103,11 @@ $(STR_MATCH_PTHREAD_OBJS): opt_string_match-pthread.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
 opt_string_match-pthread.ll: llvm_string_match-pthread.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 
 $(INTERMEDIATE_FILES): llvm_%.ll : %.c
-	clang-9 -S -emit-llvm $(CFLAGS) -I$(HOME)/$(INC_DIR) -o $@ $<
+	$(CC) -S -emit-llvm $(CFLAGS) -I$(HOME)/$(INC_DIR) -o $@ $<
 	
 
 clean:

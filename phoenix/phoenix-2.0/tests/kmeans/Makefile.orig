@@ -76,7 +76,7 @@ $(KMEANS_OBJS): opt_kmeans.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
 opt_kmeans.ll: llvm_kmeans.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 
 kmeans-seq: $(KMEANS_SEQ_OBJS)
@@ -86,7 +86,7 @@ $(KMEANS_SEQ_OBJS): opt_kmeans-seq.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
 opt_kmeans-seq.ll: llvm_kmeans-seq.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 
 kmeans-pthread: $(KMEANS_PTHREAD_OBJS)
@@ -96,11 +96,11 @@ $(KMEANS_PTHREAD_OBJS): opt_kmeans-pthread.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
 opt_kmeans-pthread.ll: llvm_kmeans-pthread.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 
 $(INTERMEDIATE_FILES): llvm_%.ll : %.c
-	clang-9 -S -emit-llvm $(CFLAGS) -I$(HOME)/$(INC_DIR) -o $@ $<
+	$(CC) -S -emit-llvm $(CFLAGS) -I$(HOME)/$(INC_DIR) -o $@ $<
 
 	
 clean:

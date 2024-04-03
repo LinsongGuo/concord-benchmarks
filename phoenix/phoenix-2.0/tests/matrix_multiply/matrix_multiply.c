@@ -237,12 +237,12 @@ int main(int argc, char *argv[]) {
     }
 
     /* TODO: Make this configurable */
-    fname_A = "//home/m8/clean-concord/CompilerInterrupts/local_home/exp_results/outputs/matrix_file_A.txt";
-    fname_B = "//home/m8/clean-concord/CompilerInterrupts/local_home/exp_results/outputs/matrix_file_B.txt";
+    // fname_A = "//home/m8/clean-concord/CompilerInterrupts/local_home/exp_results/outputs/matrix_file_A.txt";
+    // fname_B = "//home/m8/clean-concord/CompilerInterrupts/local_home/exp_results/outputs/matrix_file_B.txt";
     //fname_A = "/home/nbasu4/logicalclock/ci-llvm-v9/test-suite/phoenix/phoenix-2.0/tests/matrix_multiply/matrix_file_A.txt";
     //fname_B = "/home/nbasu4/logicalclock/ci-llvm-v9/test-suite/phoenix/phoenix-2.0/tests/matrix_multiply/matrix_file_B.txt";
-    //fname_A = "./matrix_file_A.txt";
-    //fname_B = "./matrix_file_B.txt";
+    fname_A = "matrix_file_A.txt";
+    fname_B = "matrix_file_B.txt";
     CHECK_ERROR ( (matrix_len = atoi(argv[1])) < 0);
     file_size = ((matrix_len*matrix_len))*sizeof(int);
 

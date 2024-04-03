@@ -102,9 +102,11 @@ get_time() {
   fi
   OUT_FILE="$DIR/out"
   SUM_FILE="$DIR/sum"
+  MEDIAN_FILE="$DIR/median"
 
   DIVISOR=`expr $RUNS \* 1000`
   rm -f $OUT_FILE $SUM_FILE
+  rm -f $MEDIAN_FILE
   dry_run $1
 
   echo -n "scale=2;(" > $SUM_FILE
@@ -174,6 +176,7 @@ get_time() {
     time_in_us=`cat $OUT_FILE | grep "$1 runtime: " | cut -d ':' -f 2 | cut -d ' ' -f 2 | tr -d '[:space:]'`
     if [ ! -z "$time_in_us" ]; then
       echo $time_in_us | tr -d '\n' >> $SUM_FILE
+      echo $time_in_us >> $MEDIAN_FILE
       echo "$time_in_us us" >> $DEBUG_FILE
       if [ $j -lt $RUNS ]; then
         echo -n "+" >> $SUM_FILE
@@ -187,6 +190,8 @@ get_time() {
   echo ")/$DIVISOR" >> $SUM_FILE
   time_in_ms=`cat $SUM_FILE | bc`
   echo "Average: $time_in_ms ms" >> $DEBUG_FILE
+  time_in_ms=$(echo "scale=3; $(sort -n $MEDIAN_FILE | awk '{a[i++]=$1} END {print a[int(i/2)];}') / 1000" | bc -l)
+  echo "Median: $time_in_ms ms" >> $DEBUG_FILE
   echo $time_in_ms
 }
 
@@ -208,6 +213,9 @@ perf_test() {
       ;;
     esac
 
+    LOG_FILE="$DIR/$bench-perf_logs.txt"
+    DEBUG_FILE="$DIR/$bench-perf_debug.txt"
+    
     cd $BENCH_DIR
     PER_BENCH_ORIG_STAT_FILE="$DIR/$bench-perf_orig-ad$AD.txt"
     PER_BENCH_NAIVE_STAT_FILE="$DIR/$bench-perf_naive-ad$AD.txt"

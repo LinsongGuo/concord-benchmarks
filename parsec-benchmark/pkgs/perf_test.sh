@@ -73,6 +73,8 @@ get_time() {
   fi
   OUT_FILE="$DIR/out"
   SUM_FILE="$DIR/sum"
+  MEDIAN_FILE="$DIR/median"
+  rm -f $MEDIAN_FILE
 
   DIVISOR=`expr $RUNS \* 1000`
   rm -f $OUT_FILE $SUM_FILE
@@ -129,6 +131,7 @@ get_time() {
     # echo "Run $j: $time_in_us us" 
     if [ ! -z "$time_in_us" ]; then
       echo $time_in_us | tr -d '\n' >> $SUM_FILE
+      echo $time_in_us >> $MEDIAN_FILE
       echo "$time_in_us us" >> $DEBUG_FILE
       if [ $j -lt $RUNS ]; then
         echo -n "+" >> $SUM_FILE
@@ -141,7 +144,9 @@ get_time() {
   done
   echo ")/$DIVISOR" >> $SUM_FILE 
   time_in_ms=`cat $SUM_FILE | bc` 
-  # echo "Average: $time_in_ms ms"
+  echo "Average: $time_in_ms ms" >> $DEBUG_FILE
+  time_in_ms=$(echo "scale=3; $(sort -n $MEDIAN_FILE | awk '{a[i++]=$1} END {print a[int(i/2)];}') / 1000" | bc -l)
+  echo "Median: $time_in_ms ms" >> $DEBUG_FILE
   echo $time_in_ms
 }
 
@@ -166,6 +171,9 @@ perf_test() {
       BENCH_DIR="apps/"
       ;;
     esac
+
+    LOG_FILE="$DIR/$bench-perf_logs.txt"
+    DEBUG_FILE="$DIR/$bench-perf_debug.txt"
 
     cd $BENCH_DIR
     PER_BENCH_ORIG_STAT_FILE="$DIR/$bench-perf_orig-ad$AD.txt"
@@ -216,7 +224,7 @@ perf_test() {
     echo -e "naive_time_thr1=$naive_time_thr1, orig_time_thr1=$orig_time_thr1"
     echo -e "Statistics for $bench" >> $LOG_FILE
     # slowdonw
-    slowdown=$(echo "scale=2; ($naive_time_thr1 / $orig_time_thr1)" | bc)
+    slowdown=$(echo "scale=3; ($naive_time_thr1 / $orig_time_thr1)" | bc)
     echo -e "Overhead: $slowdown"
     echo -e "Overhead $slowdown" >> $LOG_FILE
     

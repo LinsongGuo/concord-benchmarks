@@ -42,7 +42,7 @@ $(LIB_PHOENIX).so: phoenix.o
 	$(CC) --shared -o $@ $<
 
 phoenix.o: opt_phoenix.ll
-	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj $< -o $@
+	$(CNC_LLC) -relocation-model=pic -filetype=obj $< -o $@
 
 opt_phoenix.ll: llvm_phoenix.ll
 	$(OPT) $(OPT_FLAGS) -S < $< > $@

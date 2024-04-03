@@ -76,7 +76,7 @@ $(MM_OBJS): opt_matrix_multiply.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
 opt_matrix_multiply.ll: llvm_matrix_multiply.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 	
 matrix_multiply-seq: $(MM_SEQ_OBJS)
@@ -86,7 +86,7 @@ $(MM_SEQ_OBJS): opt_matrix_multiply-seq.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
 opt_matrix_multiply-seq.ll: llvm_matrix_multiply-seq.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 	
 matrix_multiply-pthread: $(MM_PTHREAD_OBJS)
@@ -96,11 +96,11 @@ $(MM_PTHREAD_OBJS): opt_matrix_multiply-pthread.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
 opt_matrix_multiply-pthread.ll: llvm_matrix_multiply-pthread.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 
 $(INTERMEDIATE_FILES): llvm_%.ll : %.c
-	clang-9 -S -emit-llvm $(CFLAGS) -I$(HOME)/$(INC_DIR) -o $@ $<
+	$(CC) -S -emit-llvm $(CFLAGS) -I$(HOME)/$(INC_DIR) -o $@ $<
 
 
 clean:

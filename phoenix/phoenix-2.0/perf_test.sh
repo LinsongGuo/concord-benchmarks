@@ -35,6 +35,12 @@ dry_run() {
     word_count)
       command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/word_50MB.txt > /dev/null 2>&1"
     ;;
+    matrix_multiply)
+      command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program 1000 100 0 > /dev/null 2>&1"
+    ;;
+    reverse_index)
+      command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/www.stanford.edu/dept/news/ > /dev/null 2>&1"
+    ;;
   esac
   echo "Dry run: "$command >> $DEBUG_FILE
   eval $command
@@ -49,6 +55,7 @@ get_time() {
 
   DIVISOR=`expr $RUNS \* 1000`
   rm -f sum
+  rm -f median
   dry_run $program
 
   echo -n "scale=2;(" > sum
@@ -71,13 +78,20 @@ get_time() {
         command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/key_file_500MB.txt > out 2>&1"
       ;;
       word_count)
-        command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/word_50MB.txt > out 2>&1"
+        command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/word_50MB.txt > out 2>&1"
+      ;;
+      matrix_multiply)
+        command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program 1000 100 0 > out 2>&1"
+      ;;
+      reverse_index)
+        command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/www.stanford.edu/dept/news/ > out 2>&1"
       ;;
     esac
     echo $command >> $DEBUG_FILE
     eval $command
     time_in_us=`cat out | grep "$program runtime: " | cut -d ':' -f 2 | cut -d ' ' -f 2 | tr -d '[:space:]'`
     echo $time_in_us | tr -d '\n' >> sum
+    echo $time_in_us >> median
     in_ms=`echo "scale=2;($time_in_us/1000)" | bc`
     echo $in_ms >> $BENCH_LOG
     echo "$time_in_us ms" >> $DEBUG_FILE
@@ -88,20 +102,26 @@ get_time() {
   echo ")/$DIVISOR" >> sum
   time_in_ms=`cat sum | bc`
   echo "Average: $time_in_ms ms" >> $DEBUG_FILE
+  time_in_ms=$(echo "scale=3; $(sort -n median | awk '{a[i++]=$1} END {print a[int(i/2)];}') / 1000" | bc -l)
+  echo "Median: $time_in_ms ms" >> $DEBUG_FILE
   echo $time_in_ms
 }
 
 perf_test() {
   echo "=================================== PERFORMANCE TEST ==========================================="
   LOG_FILE="$DIR/perf_logs-ad$AD.txt"
-  DEBUG_FILE="$DIR/perf_debug-ad$AD.txt"
+  DEBUG_FILE="$DIR/perf_debug-$*-ad$AD.txt"
   BUILD_ERROR_FILE="$DIR/perf_test_build_error-ad$AD.txt"
   BUILD_DEBUG_FILE="$DIR/perf_test_build_log-ad$AD.txt"
+  DEBUG_ORIG_FILE="$DIR/perf_debug-orig-ad$AD.txt"
+  BUILD_ERROR_ORIG_FILE="$DIR/perf_test_build_error-orig-ad$AD.txt"
+  BUILD_DEBUG_ORIG_FILE="$DIR/perf_test_build_log-orig-ad$AD.txt"
   #FIBER_CONFIG is set in the Makefile. Unless needed, do not pass a new config from this script
 #LEGACY_INTV="1 10 100 1000 10000"
   LEGACY_INTV="100 1000"
 
   rm -f $LOG_FILE $DEBUG_FILE $BUILD_ERROR_FILE $BUILD_DEBUG_FILE
+  rm -f $DEBUG_ORIG_FILE $BUILD_ERROR_ORIG_FILE $BUILD_DEBUG_ORIG_FILE
 
   for thread in $THREADS
   do
@@ -136,8 +156,8 @@ perf_test() {
 
   #run original 
   echo "Building original program: " | tee -a $DEBUG_FILE
-  make -f Makefile.orig clean >$BUILD_DEBUG_FILE 2>$BUILD_ERROR_FILE
-  make -f Makefile.orig >$BUILD_DEBUG_FILE 2>$BUILD_ERROR_FILE
+  make -f Makefile.orig clean >$BUILD_DEBUG_ORIG_FILE 2>$BUILD_ERROR_ORIG_FILE
+  make -f Makefile.orig >$BUILD_DEBUG_ORIG_FILE 2>$BUILD_ERROR_ORIG_FILE
   echo "Running original program: " | tee -a $DEBUG_FILE
   for thread in $THREADS
   do
@@ -244,4 +264,4 @@ else
   run_perf_test $@
 fi
 
-rm -f out sum
+# rm -f out sum

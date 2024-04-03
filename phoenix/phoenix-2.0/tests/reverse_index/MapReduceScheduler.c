@@ -422,15 +422,18 @@ static inline void schedule_tasks(thread_wrapper_arg_t *th_arg)
    pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM);
 
 #ifdef _LINUX_
-   unsigned long cpu_set; // bit array of available processors
-   // Create a thread for each availble processor to handle the split data
+   // unsigned long cpu_set; // bit array of available processors
+   // // Create a thread for each availble processor to handle the split data
+   // CHECK_ERROR(sched_getaffinity(0, sizeof(cpu_set), &cpu_set) == -1);
+   cpu_set_t cpu_set;
    CHECK_ERROR(sched_getaffinity(0, sizeof(cpu_set), &cpu_set) == -1);
    int max_procs = getNumProcs();
    for (thread_cnt = curr_proc = 0; 
         curr_proc < sizeof(cpu_set) && thread_cnt < num_threads; 
         curr_proc++)
    {
-      if (isCpuAvailable(cpu_set, curr_proc))
+      // if (isCpuAvailable(cpu_set, curr_proc))
+      if (CPU_ISSET(curr_proc, &cpu_set))
       {
 #endif
 #ifdef _SOLARIS_
@@ -1180,13 +1183,21 @@ static inline int getNumProcs(void)
    int num_procs = 0;
 
 #ifdef _LINUX_
-   unsigned long cpus;
+   // unsigned long cpus;
+   // int i;
+   // // Returns number of processors available to process (based on affinity mask)
+   // CHECK_ERROR(sched_getaffinity(0, sizeof(cpus), &cpus) == -1);
+   // for (i = 0; i < sizeof(cpus); i++)
+   // {
+   //    num_procs += isCpuAvailable(cpus, i);
+   // }
+   cpu_set_t cpus;
    int i;
    // Returns number of processors available to process (based on affinity mask)
    CHECK_ERROR(sched_getaffinity(0, sizeof(cpus), &cpus) == -1);
    for (i = 0; i < sizeof(cpus); i++)
    {
-      num_procs += isCpuAvailable(cpus, i);
+      num_procs += CPU_ISSET(i, &cpus);
    }
 #endif
 

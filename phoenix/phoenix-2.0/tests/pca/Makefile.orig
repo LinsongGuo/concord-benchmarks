@@ -84,7 +84,7 @@ $(PCA_OBJS): opt_pca.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
 opt_pca.ll: llvm_pca.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 
 pca-seq: $(PCA_SEQ_OBJS)
@@ -94,7 +94,7 @@ $(PCA_SEQ_OBJS): opt_pca-seq.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
 opt_pca-seq.ll: llvm_pca-seq.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 
 pca-pthread: $(PCA_PTHREAD_OBJS)
@@ -104,11 +104,11 @@ $(PCA_PTHREAD_OBJS): opt_pca-pthread.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
 opt_pca-pthread.ll: llvm_pca-pthread.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 
 $(INTERMEDIATE_FILES): llvm_%.ll : %.c
-	clang-9 -S -emit-llvm $(CFLAGS) -I$(HOME)/$(INC_DIR) -o $@ $<
+	$(CC) -S -emit-llvm $(CFLAGS) -I$(HOME)/$(INC_DIR) -o $@ $<
 
 
 clean:
