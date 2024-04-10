@@ -274,7 +274,7 @@ struct mainWork {
     int begin = range.begin();
     int end = range.end();
 
-//    unsigned long long mystart = __rdtsc();
+    // unsigned long long mystart = __rdtsc();
     for (int i=begin; i!=end; i++) {
       /* Calling main function to calculate option value based on 
        * Black & Scholes's equation.

@@ -18,37 +18,38 @@ DEBUG_FILE="$DIR/perf_debug-$AD.txt"
 BUILD_ERROR_FILE="$DIR/perf_test_build_error-$AD.txt"
 BUILD_DEBUG_FILE="$DIR/perf_test_build_log-$AD.txt"
 
+
 dry_run() {
   case "$1" in
     blackscholes)
       cd blackscholes/src > /dev/null
-      $prefix ./blackscholes$suffix $threads ../inputs/in_10M.txt prices.txt > /dev/null 2>&1
-      echo "$prefix ./blackscholes$suffix $threads ../inputs/in_10M.txt prices.txt > /dev/null 2>&1" >> $DEBUG_FILE
+      $ts $prefix ./blackscholes$suffix $threads ../inputs/in_10M.txt prices.txt > /dev/null 2>&1
+      echo "$ts $prefix ./blackscholes$suffix $threads ../inputs/in_10M.txt prices.txt > /dev/null 2>&1" >> $DEBUG_FILE
     ;;
     fluidanimate)
       cd fluidanimate/src > /dev/null
-      $prefix ./fluidanimate$suffix $threads 5 ../inputs/in_300K.fluid out.fluid > /dev/null 2>&1
-      echo "$prefix ./fluidanimate$suffix $threads 5 ../inputs/in_300K.fluid out.fluid > /dev/null 2>&1" >> $DEBUG_FILE
+      $ts $prefix ./fluidanimate$suffix $threads 5 ../inputs/in_300K.fluid out.fluid > /dev/null 2>&1
+      echo "$ts $prefix ./fluidanimate$suffix $threads 5 ../inputs/in_300K.fluid out.fluid > /dev/null 2>&1" >> $DEBUG_FILE
     ;;
     swaptions)
       cd swaptions/src > /dev/null
-      $prefix ./swaptions$suffix -ns 128 -sm 200000 -nt $threads > /dev/null 2>&1
-      echo "$prefix ./swaptions$suffix -ns 128 -sm 200000 -nt $threads > /dev/null 2>&1" >> $DEBUG_FILE
+      $ts $prefix ./swaptions$suffix -ns 128 -sm 200000 -nt $threads > /dev/null 2>&1
+      echo "$ts $prefix ./swaptions$suffix -ns 128 -sm 200000 -nt $threads > /dev/null 2>&1" >> $DEBUG_FILE
     ;;
     canneal)
       cd canneal/src > /dev/null
-      $prefix ./canneal$suffix $threads 15000 2000 ../inputs/200000.nets 6000 > /dev/null 2>&1
-      echo "$prefix ./canneal$suffix $threads 15000 2000 ../inputs/200000.nets 6000 > /dev/null 2>&1" >> $DEBUG_FILE
+      $ts $prefix ./canneal$suffix $threads 15000 2000 ../inputs/200000.nets 6000 > /dev/null 2>&1
+      echo "$ts $prefix ./canneal$suffix $threads 15000 2000 ../inputs/200000.nets 6000 > /dev/null 2>&1" >> $DEBUG_FILE
     ;;
     dedup)
       cd dedup/src > /dev/null
-      $prefix ./dedup$suffix -c -p -v -t $threads -i ../inputs/media.dat -o output.dat.ddp -w none > /dev/null 2>&1
-      echo "$prefix ./dedup$suffix -c -p -v -t $threads -i ../inputs/media.dat -o output.dat.ddp -w none > /dev/null 2>&1" >> $DEBUG_FILE
+      $ts $prefix ./dedup$suffix -c -p -v -t $threads -i ../inputs/media.dat -o output.dat.ddp -w none > /dev/null 2>&1
+      echo "$ts $prefix ./dedup$suffix -c -p -v -t $threads -i ../inputs/media.dat -o output.dat.ddp -w none > /dev/null 2>&1" >> $DEBUG_FILE
     ;;
     streamcluster)
       cd streamcluster/src > /dev/null
-      $prefix ./streamcluster$suffix 10 20 128 16384 16384 1000 none output.txt $threads > /dev/null 2>&1 
-      echo "$prefix ./streamcluster$suffix 10 20 128 16384 16384 1000 none output.txt $threads > /dev/null 2>&1" >> $DEBUG_FILE
+      $ts $prefix ./streamcluster$suffix 10 20 128 16384 16384 1000 none output.txt $threads > /dev/null 2>&1 
+      echo "$ts $prefix ./streamcluster$suffix 10 20 128 16384 16384 1000 none output.txt $threads > /dev/null 2>&1" >> $DEBUG_FILE
     ;;
   esac
   cd - > /dev/null
@@ -66,11 +67,14 @@ get_time() {
   else
     suffix="_ci"
   fi
-  if [ $4 -eq 1 ]; then
-    prefix="taskset 0x00000001 "
-  else
-    prefix=""
-  fi
+  # if [ $4 -eq 1 ]; then
+  #   prefix="taskset 0x00000001 "
+  # else
+  #   prefix=""
+  # fi
+  prefix=""
+  ts="taskset -c 4,6,8,10,12,14"
+  # ts="taskset -c 4,6"
   OUT_FILE="$DIR/out"
   SUM_FILE="$DIR/sum"
   MEDIAN_FILE="$DIR/median"
@@ -86,44 +90,44 @@ get_time() {
     case "$1" in
       blackscholes)
         cd blackscholes/src > /dev/null
-        $prefix ./blackscholes$suffix $threads ../inputs/in_10M.txt prices.txt > $OUT_FILE
+        $ts $prefix ./blackscholes$suffix $threads ../inputs/in_10M.txt prices.txt > $OUT_FILE
         sleep 1.5
-        echo "$prefix ./blackscholes$suffix $threads ../inputs/in_10M.txt prices.txt > $OUT_FILE" >> $DEBUG_FILE
+        echo "$ts $prefix ./blackscholes$suffix $threads ../inputs/in_10M.txt prices.txt > $OUT_FILE" >> $DEBUG_FILE
         cd - > /dev/null
       ;;
       fluidanimate)
         cd fluidanimate/src > /dev/null
-        $prefix ./fluidanimate$suffix $threads 5 ../inputs/in_300K.fluid out.fluid > $OUT_FILE
+        $ts $prefix ./fluidanimate$suffix $threads 5 ../inputs/in_300K.fluid out.fluid > $OUT_FILE
         sleep 0.5
-        echo "$prefix ./fluidanimate$suffix $threads 5 ../inputs/in_300K.fluid out.fluid > $OUT_FILE" >> $DEBUG_FILE
+        echo "$ts $prefix ./fluidanimate$suffix $threads 5 ../inputs/in_300K.fluid out.fluid > $OUT_FILE" >> $DEBUG_FILE
         cd - > /dev/null
       ;;
       swaptions) 
         cd swaptions/src > /dev/null
-        $prefix ./swaptions$suffix -ns 128 -sm 200000 -nt $threads > $OUT_FILE
+        $ts $prefix ./swaptions$suffix -ns 128 -sm 200000 -nt $threads > $OUT_FILE
 	sleep 1.5
-	echo "$prefix ./swaptions$suffix -ns 128 -sm 200000 -nt $threads > $OUT_FILE" >> $DEBUG_FILE
+	echo "$ts $prefix ./swaptions$suffix -ns 128 -sm 200000 -nt $threads > $OUT_FILE" >> $DEBUG_FILE
         cd - > /dev/null
       ;;
       canneal) 
         cd canneal/src > /dev/null
-        $prefix ./canneal$suffix $threads 15000 2000 ../inputs/200000.nets 6000 > $OUT_FILE
+        $ts $prefix ./canneal$suffix $threads 15000 2000 ../inputs/200000.nets 6000 > $OUT_FILE
         sleep 1.5
-	echo "$prefix ./canneal$suffix $threads 15000 2000 ../inputs/200000.nets 6000 > $OUT_FILE" >> $DEBUG_FILE
+	echo "$ts $prefix ./canneal$suffix $threads 15000 2000 ../inputs/200000.nets 6000 > $OUT_FILE" >> $DEBUG_FILE
         cd - > /dev/null
       ;;
       dedup)
         cd dedup/src > /dev/null
-        $prefix ./dedup$suffix -c -p -v -t $threads -i ../inputs/media.dat -o output.dat.ddp -w none > $OUT_FILE
+        $ts $prefix ./dedup$suffix -c -p -v -t $threads -i ../inputs/media.dat -o output.dat.ddp -w none > $OUT_FILE
         sleep 1.5
-        echo "$prefix ./dedup$suffix -c -p -v -t $threads -i ../inputs/media.dat -o output.dat.ddp -w none > $OUT_FILE" >> $DEBUG_FILE
+        echo "$ts $prefix ./dedup$suffix -c -p -v -t $threads -i ../inputs/media.dat -o output.dat.ddp -w none > $OUT_FILE" >> $DEBUG_FILE
         cd - > /dev/null
       ;;
       streamcluster)
         cd streamcluster/src > /dev/null
-        $prefix ./streamcluster$suffix 10 20 128 16384 16384 1000 none output.txt $threads > $OUT_FILE
+        $ts $prefix ./streamcluster$suffix 10 20 128 16384 16384 1000 none output.txt $threads > $OUT_FILE
         sleep 1.5
-        echo "$prefix ./streamcluster$suffix 10 20 128 16384 16384 1000 none output.txt $threads > $OUT_FILE" >> $DEBUG_FILE
+        echo "$ts $prefix ./streamcluster$suffix 10 20 128 16384 16384 1000 none output.txt $threads > $OUT_FILE" >> $DEBUG_FILE
         cd - > /dev/null
       ;;
     esac

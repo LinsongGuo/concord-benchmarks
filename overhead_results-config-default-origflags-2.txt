@@ -21,6 +21,7 @@ phoenix,word_count,1.027
 phoenix,matrix_multiply,1.125
 phoenix,reverse_index,1.195
 
+// wrong:
 parsec,blackscholes,1.010
 parsec,fluidanimate,1.027
 parsec,swaptions,1.041
@@ -49,9 +50,19 @@ phoenix,linear_regression,1.029
 phoenix,word_count,1.030
 phoenix,matrix_multiply,1.135
 phoenix,reverse_index,1.191
+
+// wrong:
 parsec,blackscholes,1.012
 parsec,fluidanimate,1.015
 parsec,swaptions,1.041
 parsec,canneal,1.036
 parsec,streamcluster,1.057
 parsec,dedup,2.052
+
+
+parsec,blackscholes,1.009
+parsec,fluidanimate,1.026
+parsec,swaptions,1.065
+parsec,canneal,1.050
+parsec,streamcluster,1.073
+parsec,dedup,1.033

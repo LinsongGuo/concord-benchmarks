@@ -7,7 +7,7 @@ SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 unroll_configs = {}
 # overhead_results = "overhead_results--default.txt"
-overhead_results = "overhead_results-configconfig-default-origflags-2.txt"
+overhead_results = "overhead_results-config-default-origflags-2.txt"
 # overhead_results = "overhead_results-config-default-nodispatcher-origflags-2.txt"
 benchs = [
     {
@@ -19,13 +19,13 @@ benchs = [
     {
         "name": "phoenix",
         "path": "phoenix/phoenix-2.0/",
-        # "benchs": [ "matrix_multiply"]
+        # "benchs": [ "histogram"]
         "benchs": ["histogram", "kmeans", "pca", "string_match", "linear_regression", "word_count", "matrix_multiply", "reverse_index"]
     },
     {
         "name": "parsec",
         "path": "parsec-benchmark/pkgs/",
-        # "benchs": [ "streamcluster"]
+        # "benchs": [ "fluidanimate"]
         "benchs": ["blackscholes", "fluidanimate", "swaptions", "canneal", "streamcluster", "dedup"]
     }
 ]
@@ -43,7 +43,7 @@ def run_bench(bench_category, bench_name, accuracy=0, pass_type="cache"):
 
     os.chdir(os.path.join(SCRIPT_DIR, bench_category["path"]))
 
-    cmd = f" RUNS={1 if accuracy else 1 } \
+    cmd = f" RUNS={1 if accuracy else 21 } \
                                         MODIFIED_SUBLOOP_COUNT={int(unroll_configs[bench_name][1])} \
                                         UNROLL_COUNT={int(unroll_configs[bench_name][0])} \
                                         ACCURACY_TEST={accuracy} CONCORD_PASS_TYPE={pass_type} \
