@@ -28,9 +28,11 @@ def calculate_time_diff(arr):
 
 data = read_bin_latency(os.path.join(file))
 
+print(data)
 # throw 0s
 data = data[data != 0]
-data = data[int(len(data)*0.1):]
+print(len(data))
+# data = data[int(len(data)*0.1):]
 data = calculate_time_diff(data)
 
 # get %50 %90 %99

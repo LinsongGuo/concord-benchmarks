@@ -255,8 +255,9 @@ perf_test() {
       naive_time_thr1=$lc_naive_time
 
       ACCURACY_FILE="$DIR/accuracy-$bench.txt"
+      echo "ACCURACY_FILE: $ACCURACY_FILE" >> $LOG_FILE
       cp ${CONCORD_TIMESTAMP_PATH} $ACCURACY_FILE
-      rm ${CONCORD_TIMESTAMP_PATH}
+      # rm ${CONCORD_TIMESTAMP_PATH}
     done
 
 

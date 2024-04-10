@@ -216,7 +216,7 @@ perf_test() {
 
       ACCURACY_FILE="$DIR/accuracy-$bench.txt"
       cp ${CONCORD_TIMESTAMP_PATH} $ACCURACY_FILE
-      rm ${CONCORD_TIMESTAMP_PATH}
+      # rm ${CONCORD_TIMESTAMP_PATH}
     done
     sleep 1
 

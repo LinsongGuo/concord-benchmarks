@@ -404,6 +404,7 @@ void sub_Compress(chunk_t *chunk) {
 #ifdef ENABLE_PTHREADS
 void *Compress(void * targs) {
       
+  // printf("Compress starts\n");
 #ifdef CI_PASS
   init_stats(__sync_fetch_and_add(&general_tid, 1));
 #endif 
@@ -469,6 +470,7 @@ void *Compress(void * targs) {
   print_timing_stats();
 #endif
 
+  // printf("Compress ends\n");
 #ifdef ENABLE_STATISTICS
   return thread_stats;
 #else
@@ -538,6 +540,7 @@ int sub_Deduplicate(chunk_t *chunk) {
 #ifdef ENABLE_PTHREADS
 void * Deduplicate(void * targs) {
 
+  // printf("Deduplicate starts\n");
 #ifdef CI_PASS
   init_stats(__sync_fetch_and_add(&general_tid, 1));
 #endif	
@@ -623,6 +626,7 @@ void * Deduplicate(void * targs) {
 #ifdef CI_PASS
   print_timing_stats();
 #endif
+  // printf("Deduplicate ends\n");
 #ifdef ENABLE_STATISTICS
   return thread_stats;
 #else
@@ -645,6 +649,7 @@ void * Deduplicate(void * targs) {
 #ifdef ENABLE_PTHREADS
 void *FragmentRefine(void * targs) {
 
+  // printf("FragmentRefine starts\n");
 #ifdef CI_PASS
   init_stats(__sync_fetch_and_add(&general_tid, 1));
 #endif 
@@ -771,6 +776,7 @@ void *FragmentRefine(void * targs) {
   print_timing_stats();
 #endif
 
+  // printf("FragmentRefine ends\n");
 #ifdef ENABLE_STATISTICS
   return thread_stats;
 #else
@@ -1235,6 +1241,7 @@ void *Fragment(void * targs){
 #ifdef ENABLE_PTHREADS
 void *Reorder(void * targs) {
 
+  // printf("Reorder starts\n");
 #ifdef CI_PASS
   init_stats(__sync_fetch_and_add(&general_tid, 1));
 #endif 
@@ -1384,6 +1391,7 @@ void *Reorder(void * targs) {
 #ifdef CI_PASS
   print_timing_stats();
 #endif
+  // printf("Reorder ends\n");
   return NULL;
 }
 #endif //ENABLE_PTHREADS

@@ -6,14 +6,14 @@ import re
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 unroll_configs = {}
-overhead_results = "overhead_results-config-default.txt"
-# overhead_results = "overhead_results-config-default-origflags.txt"
-# overhead_results = "overhead_results-config-default-nodispatcher-origflags.txt"
+# overhead_results = "overhead_results--default.txt"
+overhead_results = "overhead_results-configconfig-default-origflags-2.txt"
+# overhead_results = "overhead_results-config-default-nodispatcher-origflags-2.txt"
 benchs = [
     {
         "name": "splash2",
         "path": "splash2/codes/",
-        # "benchs": [ "raytrace"]
+        # "benchs": [ "fmm"]
         "benchs": ["water-nsquared", "water-spatial", "ocean-cp", "ocean-ncp", "volrend", "fmm", "raytrace", "radix", "fft", "lu-c", "lu-nc", "cholesky", "radiosity"]
     },
     {
@@ -25,7 +25,7 @@ benchs = [
     {
         "name": "parsec",
         "path": "parsec-benchmark/pkgs/",
-        # "benchs": [ "fluidanimate"]
+        # "benchs": [ "streamcluster"]
         "benchs": ["blackscholes", "fluidanimate", "swaptions", "canneal", "streamcluster", "dedup"]
     }
 ]
@@ -94,6 +94,8 @@ if __name__ == "__main__":
     if not os.path.exists("results"):
         os.mkdir("results")
 
-    run_category(benchs[0], timeliness=False, overhead=True)
-    run_category(benchs[1], timeliness=False, overhead=True)
+    # run_category(benchs[0], timeliness=True, overhead=False)
+    # run_category(benchs[2], timeliness=True, overhead=False)
+    # run_category(benchs[0], timeliness=False, overhead=True)
+    # run_category(benchs[1], timeliness=False, overhead=True)
     run_category(benchs[2], timeliness=False, overhead=True)

@@ -7,6 +7,7 @@
 // Reference Source: Options, Futures, and Other Derivatives, 3rd Edition, Prentice 
 // Hall, John C. Hull,
 
+// #include <x86intrin.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -264,6 +265,7 @@ struct mainWork {
     int begin = range.begin();
     int end = range.end();
 
+    // unsigned long long mystart = __rdtsc();
     for (int i=begin; i!=end; i++) {
       /* Calling main function to calculate option value based on 
        * Black & Scholes's equation.
@@ -283,6 +285,8 @@ struct mainWork {
       }
 #endif
     }
+    // unsigned long long myend = __rdtsc();
+    // printf("mainwork: %llu usec\n", (myend - mystart) / 1000 / 2);
   }
 };
 
@@ -298,6 +302,7 @@ int bs_thread(void *tid_ptr) {
     int j;
     tbb::affinity_partitioner a;
 
+    // printf("bs_thread Runs\n");
     mainWork doall;
     for (j=0; j<NUM_RUNS; j++) {
       tbb::parallel_for(tbb::blocked_range<int>(0, numOptions), doall, a);
@@ -366,6 +371,7 @@ int main (int argc, char **argv)
     int * buffer2;
     int rv;
 
+    // unsigned long long mystart = __rdtsc();
      
 
 #ifdef CI_PASS
@@ -446,6 +452,8 @@ int main (int argc, char **argv)
     //_M4_numThreads = nThreads;
 
 #endif
+    // unsigned long long myend = __rdtsc();
+    // printf("input time: %llu usec\n", (myend - mystart) / 2000);
     printf("Num of Options: %d\n", numOptions);
     printf("Num of Runs: %d\n", NUM_RUNS);
 
@@ -549,6 +557,7 @@ int main (int argc, char **argv)
     __parsec_roi_end();
 #endif
 
+    // mystart = __rdtsc();
     //Write prices to output file
     file = fopen(outputFile, "w");
     if(file == NULL) {
@@ -575,6 +584,8 @@ int main (int argc, char **argv)
       exit(1);
     }
 
+    // myend = __rdtsc();
+    // printf("output time: %llu usec\n", (myend - mystart) / 2000);
 #ifdef ERR_CHK
     printf("Num Errors: %d\n", numError);
 #endif

@@ -14,6 +14,7 @@
 #include <sys/time.h>
 #include <stdint.h>
 
+// #include <x86intrin.h>
 #ifdef ENABLE_PARSEC_HOOKS
 #include <hooks.h>
 #endif
@@ -337,6 +338,7 @@ int main (int argc, char **argv)
     int rv;
 
      
+    // unsigned long long mystart = __rdtsc();
 
 #ifdef CI_PASS
     init_stats(0, MAX_CPU);
@@ -410,6 +412,8 @@ int main (int argc, char **argv)
       exit(1);
     }
 
+    // unsigned long long myend = __rdtsc();
+    // printf("input time: %llu usec\n", (myend - mystart) / 1000);
 #ifdef ENABLE_THREADS
     MAIN_INITENV(,8000000,nThreads);
 #endif
@@ -494,6 +498,7 @@ int main (int argc, char **argv)
     __parsec_roi_end();
 #endif
 
+    // mystart = __rdtsc();
     //Write prices to output file
     file = fopen(outputFile, "w");
     if(file == NULL) {
@@ -520,6 +525,8 @@ int main (int argc, char **argv)
       exit(1);
     }
 
+    // myend = __rdtsc();
+    // printf("output time: %llu usec\n", (myend - mystart) / 1000);
 #ifdef ERR_CHK
     printf("Num Errors: %d\n", numError);
 #endif
