@@ -60,8 +60,8 @@ int main(int argc, char** argv) {
 #endif
 
 
-  struct timeval  rt_begin, rt_end;
-  gettimeofday(&rt_begin, NULL);
+  // struct timeval  rt_begin, rt_end;
+  // gettimeofday(&rt_begin, NULL);
 
 #ifdef PARSEC_VERSION
 #define __PARSEC_STRING(x) #x

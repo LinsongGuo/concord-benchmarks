@@ -1534,6 +1534,8 @@ void Encode(config_t * _conf) {
     __parsec_roi_begin();
 #endif
 
+  gettimeofday(&rt_begin, NULL);
+
   //thread for first pipeline stage (input)
   pthread_create(&threads_process, NULL, Fragment, &data_process_args);
 

@@ -1,11 +1,14 @@
 CI_LIB_HOME := $(shell pwd)/../../../../../
 CI_HOME := $(shell pwd)/../../../
 
-CFLAGS := -O3 -pthread -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -static -integrated-as -msoft-float # _GNU_SOURCE is added to support pthread_setaffinity_np
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_base.o
+
+CFLAGS := -O3 -pthread -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -integrated-as -msoft-float # _GNU_SOURCE is added to support pthread_setaffinity_np
 CFLAGS := $(CFLAGS) -Wall -W -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls -Wdisabled-optimization
 CFLAGS := $(CFLAGS) -Wpadded -Winline -Wpointer-arith -Wsign-compare -Wendif-labels
 CFLAGS := $(CFLAGS) $(EXTRA_FLAGS) -I$(CI_LIB_HOME)/src -I$(CI_HOME)
-LDFLAGS := -lm -static -lpapi -lpfm
+#LDFLAGS := -lm -static -lpapi -lpfm $(CONCORD_LIB)
+LDFLAGS := -lm -lpapi -lpfm $(CONCORD_LIB)
 
 export OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution 
 

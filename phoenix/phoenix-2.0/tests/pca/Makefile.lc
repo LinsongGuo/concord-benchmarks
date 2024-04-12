@@ -83,8 +83,13 @@ pca: $(PCA_OBJS) $(LIB_DEP)
 $(PCA_OBJS): pca.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
+ifeq ($(UINTR),1)
+pca.ll: opt_pca.ll
+	cp $< $@
+else
 pca.ll: opt_pca.ll
 	$(OPT) $(LC_FLAGS)  < $< > $@
+endif
 
 opt_pca.ll: llvm_pca.ll
 	$(OPT) $(OPT_FLAGS) -S < $< > $@

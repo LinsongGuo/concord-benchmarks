@@ -84,8 +84,13 @@ linear_regression: $(L_REG_OBJS) $(LIB_DEP)
 $(L_REG_OBJS): linear_regression.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
+ifeq ($(UINTR),1)
+linear_regression.ll: opt_linear_regression.ll
+	cp $< $@
+else
 linear_regression.ll: opt_linear_regression.ll
 	$(OPT) $(LC_FLAGS)  < $< > $@
+endif
 
 opt_linear_regression.ll: llvm_linear_regression.ll
 	$(OPT) $(OPT_FLAGS) -S < $< > $@

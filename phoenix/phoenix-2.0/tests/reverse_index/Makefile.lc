@@ -76,7 +76,7 @@ endif
 LLVM_BUILD = /usr
 
 # these variables may be exported from outside
-EXTRA_FLAGS ?= -DAVG_STATS
+# EXTRA_FLAGS ?= -DAVG_STATS
 # INST_LEVEL ?= 1
 # PUSH_INTV ?= 5000
 # CMMT_INTV ?= 1000
@@ -90,12 +90,14 @@ CI_HOME = $(shell pwd)/../../../../#w.r.t src directory
 
 ifeq ($(UNROLL_COUNT), 0)
 OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
+else ifeq ($(UINTR), 1)
+OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
 else
 OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution -loop-unroll -unroll-allow-partial -unroll-count=$(UNROLL_COUNT)
 endif
 
 ifeq ($(ACCURACY_TEST), 0) 
-CONCORD_LIB = ${CONCORD_LIB_PATH}/concord.a
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_pthread.o -Wl,--wrap=pthread_create
 else
 CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.a
 endif
@@ -115,7 +117,7 @@ LC_FLAGS = $(CONCORD_PASS_OPT)
 CFLAGS += -g -Wall $(ARCH) -O3 -D_GNU_SOURCE $(EXTRA_FLAGS) -DREVERSE_INDEX -I$(CI_HOME) -I$(CI_LIB_HOME)/src
 #LIBS = -lm -lpthread -lrt -lcpc
 LIBS = -lm -lpthread -lrt -lpfm -L$(CI_LIB_HOME)/lib -Wl,-rpath=$(CI_LIB_HOME)/lib $(EXTRA_LD_FLAGS) $(CONCORD_LIB)
-CFLAGS += -Dconcord
+#CFLAGS += -Dconcord
 
 REV_SEQ_OBJS = reverse_index-seq.o
 REV_PTHREAD_OBJS = reverse_index-pthread.o
@@ -138,8 +140,13 @@ reverse_index-pthread: $(REV_PTHREAD_OBJS)
 reverse_index: reverse_index-lc.ll
 	$(CC) $(CFLAGS) -o $@ $< $(LIBS)
 
+ifeq ($(UINTR),1)
+reverse_index-lc.ll: reverse_index-opt.ll
+	cp $< $@
+else
 reverse_index-lc.ll: reverse_index-opt.ll
 	$(OPT) $(LC_FLAGS) $^ -o $@
+endif
 
 reverse_index-opt.ll: reverse_index-all.ll
 	$(OPT) $(OPT_FLAGS) -S $^ -o $@

@@ -82,8 +82,13 @@ kmeans: $(KMEANS_OBJS) $(LIB_DEP)
 $(KMEANS_OBJS): kmeans.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
+ifeq ($(UINTR),1)
+kmeans.ll: opt_kmeans.ll
+	cp $< $@
+else
 kmeans.ll: opt_kmeans.ll
 	$(OPT) $(LC_FLAGS)  < $< > $@
+endif
 
 opt_kmeans.ll: llvm_kmeans.ll
 	$(OPT) $(OPT_FLAGS) -S < $< > $@

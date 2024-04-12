@@ -898,6 +898,7 @@ map_worker (void *args)
 
     get_time (&work_begin);
     while (map_worker_do_next_task (env, thread_index, &mwta)) {
+        // printf("map_worker_do_next_task\n");
         user_time += mwta.run_time;
         num_assigned++;
     }
@@ -1449,7 +1450,7 @@ static int gen_map_tasks (mr_env_t* env)
 
     ret = gen_map_tasks_distribute (env, num_map_tasks, &temp_queue);
     if (ret == 0) ret = num_map_tasks;
-
+    // printf("==================== num_map_tasks:%d\n", num_map_tasks);
     return num_map_tasks;
 }
 
@@ -2037,7 +2038,7 @@ array_splitter (void *data_in, int req_units, map_args_t *out)
     //fiber_yield();
     unit_size = env->args->unit_size;
     data_units = env->args->data_size / unit_size;
-
+    // printf("++++++++++++++++++ data_units: %d\n", data_units);
     /* End of data reached, return FALSE. */
     if (env->splitter_pos >= data_units)
         return 0;

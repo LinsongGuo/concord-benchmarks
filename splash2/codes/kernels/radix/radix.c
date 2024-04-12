@@ -1497,6 +1497,7 @@ void printerr(char *s)
 
 void init(long key_start, long key_stop, long from)
 {
+  // printf("************ init starts\n");
    double ran_num;
    double sum;
    long tmp;
@@ -1504,8 +1505,10 @@ void init(long key_start, long key_stop, long from)
    long *key_from;
 
    ran_num = ran_num_init((key_start << 2) + 1, SEED, RATIO);
+   // printf("ran_num_init ends\n");
    sum = ran_num / RADIX;
    key_from = (long *) key[from];
+   // printf("key_start: %d, key_stop: %d\n", key_start, key_stop);
    for (i = key_start; i < key_stop; i++) {
       ran_num = product_mod_46(ran_num, RATIO);
       sum = sum + ran_num / RADIX;
@@ -1518,6 +1521,7 @@ void init(long key_start, long key_stop, long from)
       ran_num = product_mod_46(ran_num, RATIO);
       sum = ran_num / RADIX;
    }
+   // printf("************ init ends\n");
 }
 
 void test_sort(long final)

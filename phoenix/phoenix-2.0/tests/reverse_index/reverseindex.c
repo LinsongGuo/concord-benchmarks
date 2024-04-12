@@ -426,7 +426,8 @@ int main (int argc, char **argv)
    cleanup();
    gettimeofday(&rt_end, NULL);
    uint64_t run_time = (rt_end.tv_sec - rt_begin.tv_sec)*1000000 + (rt_end.tv_usec - rt_begin.tv_usec);
-   printf("reverse_index runtime: %lu usec\n", run_time);
+   // printf("reverse_index runtime: %lu usec\n", run_time);
+   printf("library: %lu usec\n", run_time);
 
    print_timing_stats();
    return 0;

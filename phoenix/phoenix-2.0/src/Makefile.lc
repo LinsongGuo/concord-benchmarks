@@ -48,9 +48,14 @@ $(LIB_PHOENIX).so: lc_all.o
 lc_all.o: lc_all.ll
 	$(CNC_LLC) -relocation-model=pic -filetype=obj $<
 
+ifeq ($(UINTR),1)
+lc_all.ll: opt_all.ll
+	cp $< $@
+else
 lc_all.ll: opt_all.ll
 	echo "COST_FILE_PATH $(COST_FILE_PATH)"
 	$(OPT) $(SRC_LC_FLAGS) < $< > $@
+endif
 
 opt_all.ll: llvm_all.ll
 	$(OPT) $(OPT_FLAGS) -S < $< > $@

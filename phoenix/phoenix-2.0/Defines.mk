@@ -35,8 +35,11 @@ MODIFIED_SUBLOOP_COUNT ?= 200
 DISABLE_BOUNDED_LOOP ?= 1
 
 # ==== CONCORD Start ====
-ifeq ($(ACCURACY_TEST), 0) 
-CONCORD_LIB = ${CONCORD_LIB_PATH}/concord.a
+ifeq ($(ORIG), 1)
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_base.o
+else ifeq ($(ACCURACY_TEST), 0) 
+# CONCORD_LIB = ${CONCORD_LIB_PATH}/concord.o
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_pthread.o -Wl,--wrap=pthread_create
 else
 CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.a
 endif
@@ -147,7 +150,11 @@ SRC_LC_FLAGS = $(CONCORD_PASS_OPT)
 
 UNROLL_COUNT ?= 0
 
-ifeq ($(UNROLL_COUNT), 0)
+ifeq ($(ORIG), 1)
+OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
+else ifeq ($(UINTR), 1)
+OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
+else ifeq ($(UNROLL_COUNT), 0)
 OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
 else
 OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution -loop-unroll -unroll-allow-partial -unroll-count=$(UNROLL_COUNT)

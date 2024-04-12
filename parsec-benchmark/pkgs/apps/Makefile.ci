@@ -40,6 +40,8 @@ UNROLL_COUNT ?= 0
 ifeq ($(UNROLL_COUNT), 0)
 $(info Unrolling disabled)
 export OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
+else ifeq ($(UINTR), 1)
+export OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
 else
 $(info Unrolling by $(UNROLL_COUNT))
 export OPT_FLAGS = -loop-unroll -unroll-allow-partial -unroll-count=$(UNROLL_COUNT) -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution 

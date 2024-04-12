@@ -83,8 +83,13 @@ word_count: word_count.o $(LIB_DEP)
 word_count.o: word_count.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
+ifeq ($(UINTR),1)
+word_count.ll: opt_word_count.ll
+	cp $< $@
+else
 word_count.ll: opt_word_count.ll
 	$(OPT) $(LC_FLAGS)  < $< > $@
+endif
 
 opt_word_count.ll: llvm_word_count_all.ll
 	$(OPT) $(OPT_FLAGS) -S < $< > $@

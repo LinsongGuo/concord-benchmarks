@@ -72,7 +72,7 @@ int main (int argc, char * const argv[]) {
 #endif
 
     	struct timeval  rt_begin, rt_end;
-	gettimeofday(&rt_begin, NULL);
+	// gettimeofday(&rt_begin, NULL);
 
 #ifdef PARSEC_VERSION
 #define __PARSEC_STRING(x) #x
@@ -123,6 +123,8 @@ int main (int argc, char * const argv[]) {
 
 	//now that we've read in the commandline, run the program
 	netlist my_netlist(filename);
+	
+	gettimeofday(&rt_begin, NULL);
 	
 	annealer_thread a_thread(&my_netlist,num_threads,swaps_per_temp,start_temp,number_temp_steps);
 	

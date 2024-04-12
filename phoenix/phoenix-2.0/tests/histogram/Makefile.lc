@@ -54,8 +54,13 @@ histogram: $(HIST_OBJS) $(LIB_DEP)
 $(HIST_OBJS): histogram.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
+ifeq ($(UINTR),1)
+histogram.ll: opt_histogram.ll
+	cp $< $@
+else
 histogram.ll: opt_histogram.ll
 	$(OPT) $(LC_FLAGS) < $< > $@
+endif
 
 opt_histogram.ll: llvm_histogram.ll
 	$(OPT) $(OPT_FLAGS) -S < $< > $@

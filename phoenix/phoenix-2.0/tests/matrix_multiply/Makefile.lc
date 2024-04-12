@@ -83,8 +83,13 @@ matrix_multiply: $(MM_OBJS) $(LIB_DEP)
 $(MM_OBJS): matrix_multiply.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
+ifeq ($(UINTR),1)
+matrix_multiply.ll: opt_matrix_multiply.ll
+	cp $< $@
+else
 matrix_multiply.ll: opt_matrix_multiply.ll
 	$(OPT) $(LC_FLAGS)  < $< > $@
+endif
 
 opt_matrix_multiply.ll: llvm_matrix_multiply.ll
 	$(OPT) $(OPT_FLAGS) -S < $< > $@

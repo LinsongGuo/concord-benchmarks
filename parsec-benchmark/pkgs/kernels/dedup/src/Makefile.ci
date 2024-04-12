@@ -71,8 +71,13 @@ dedup_llvm_all.ll: $(INTERMEDIATE_FILES)
 dedup_llvm_opt.ll: dedup_llvm_all.ll
 	opt-9 $(OPT_FLAGS) -S $^ -o $@
 
+ifeq ($(UINTR),1)
+dedup_llvm_ci.ll: dedup_llvm_opt.ll
+	cp $< $@
+else
 dedup_llvm_ci.ll: dedup_llvm_opt.ll
 	opt-9 $(CI_PASS_OPT) < $< > $@
+endif
 
 $(LLVM_TARGET): dedup_llvm_ci.ll
 	clang-9 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $^ -o $@

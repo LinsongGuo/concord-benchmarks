@@ -63,6 +63,8 @@ INTERMEDIATE_FILES := $(patsubst %.c, %.ll, $(SRC_FILES))
 PROGS = word_count word_count-seq word_count-pthread
 PROGS = word_count
 
+OPT_FLAGS := -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
+
 .PHONY: default all clean
 
 default: all

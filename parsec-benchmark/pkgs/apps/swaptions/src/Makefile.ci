@@ -66,8 +66,13 @@ swaptions_llvm_all.ll: $(INTERMEDIATE_FILES) llvm_nr_routines.ll
 swaptions_llvm_opt.ll: swaptions_llvm_all.ll
 	opt-9 $(OPT_FLAGS) -S $^ -o $@
 
+ifeq ($(UINTR),1)
+swaptions_llvm_ci.ll: swaptions_llvm_opt.ll
+	cp $< $@
+else
 swaptions_llvm_ci.ll: swaptions_llvm_opt.ll
 	opt-9 $(CI_PASS_OPT) < $< > $@
+endif
 
 $(LLVM_TARGET): swaptions_llvm_ci.ll
 	clang++-9 $(CXXFLAGS_LLVM) $(CFLAGS) $(LDFLAGS) $(DEF) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) -o $@ $^	

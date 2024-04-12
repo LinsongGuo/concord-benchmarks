@@ -155,6 +155,7 @@ void *matrixmult_locator(map_args_t *task)
  */
 void matrixmult_map(map_args_t *args)
 {
+    // printf("matrixmult_map\n");
     int row_count = 0;
     int i,j, x_loc, y_loc,value;
     int * a_ptr,* b_ptr;    
@@ -168,6 +169,7 @@ void matrixmult_map(map_args_t *args)
 
     /* dprintf("%d Start Loop \n",data->row_num); */
 
+    // printf("len: %d, matlen: %d, matlen: %d\n", args->length, data->matrix_len, data->matrix_len);
     while(row_count < args->length)
     {
         a_ptr = data->matrix_A + (data->row_num + row_count)*data->matrix_len;
@@ -221,7 +223,7 @@ int main(int argc, char *argv[]) {
     get_time (&begin);
 
     // intvActionHook(0);
-    // init_stats(0); // parameter is unused
+    init_stats(0); // parameter is unused
 
 #ifdef LIBFIBER
     fiber_manager_init(1);
@@ -428,7 +430,6 @@ int main(int argc, char *argv[]) {
     get_time (&rt_end);
     run_time = time_diff (&rt_end, &rt_begin);
     printf("matrix_multiply runtime: %lu usec\n", run_time);
-
     print_timing_stats();
     return 0;
 }

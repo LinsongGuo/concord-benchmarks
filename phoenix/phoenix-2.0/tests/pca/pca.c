@@ -409,7 +409,7 @@ int main(int argc, char **argv)
     get_time (&begin);
 
     // intvActionHook(0);
-    // init_stats(0); // parameter is unused
+    init_stats(0); // parameter is unused
 
 #ifdef LIBFIBER
     fiber_manager_init(1);

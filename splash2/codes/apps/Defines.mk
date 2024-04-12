@@ -13,8 +13,13 @@ $(TARGET1): createfiles lc_all.ll
 $(TARGET2): createfiles opt_simplified.ll
 	$(CC) -g $(CFLAGS) -fstandalone-debug $(word 2,$^) $(LOADLIBS) $(LDFLAGS) -o $@ 
 
+ifeq ($(UINTR),1)
+lc_all.ll: opt_simplified.ll
+	cp $< $@
+else
 lc_all.ll: opt_simplified.ll
 	$(OPT) $(LC_FLAGS) < $< > $@
+endif
 
 opt_simplified.ll: llvm_all.ll
 	$(OPT) $(OPT_FLAGS) -S < $< > $@

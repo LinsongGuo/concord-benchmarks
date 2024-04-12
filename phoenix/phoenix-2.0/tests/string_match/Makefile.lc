@@ -83,8 +83,13 @@ string_match: $(STR_MATCH_OBJS) $(LIB_DEP)
 $(STR_MATCH_OBJS): string_match.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj -o $@ $<
 
+ifeq ($(UINTR),1)
+string_match.ll: opt_string_match.ll
+	cp $< $@
+else
 string_match.ll: opt_string_match.ll
 	$(OPT) $(LC_FLAGS)  < $< > $@
+endif
 
 opt_string_match.ll: llvm_string_match.ll
 	$(OPT) $(OPT_FLAGS) -S < $< > $@

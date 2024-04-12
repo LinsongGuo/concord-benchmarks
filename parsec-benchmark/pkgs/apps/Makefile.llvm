@@ -1,8 +1,10 @@
 CI_LIB_HOME := $(shell pwd)/../../../../../
 CI_HOME := $(shell pwd)/../../../
 
+CONCORD_LIB := ${CONCORD_LIB_PATH}/concord_base.o
+
 CXXFLAGS += -I$(CI_LIB_HOME)/src -I$(CI_HOME)
-LDFLAGS := -lm -lpapi -lpfm
+LDFLAGS := -lm -lpapi -lpfm $(CONCORD_LIB)
 
 #************************************ Export variables **********************************#
 export LLVM_SRC_PATH	?= /home/nbasu4/logicalclock/ci-llvm-v9/

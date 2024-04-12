@@ -82,6 +82,7 @@ static int* center_table; //index table of centers
 
 static int nproc; //# of threads
 
+struct timeval  rt_begin, rt_end;
 
 #ifdef TBB_VERSION
 tbb::cache_aligned_allocator<float> memoryFloat;
@@ -1972,6 +1973,8 @@ void streamCluster( PStream* stream,
 
   localSearch( &centers, kmin, kmax ,&kfinal ); // parallel
   contcenters(&centers);
+  
+  gettimeofday(&rt_end, NULL);
   outcenterIDs( &centers, centerIDs, outfile);
 }
 
@@ -1981,7 +1984,7 @@ int main(int argc, char **argv)
 	init_stats(0);
 #endif
     
-  struct timeval  rt_begin, rt_end;
+  // struct timeval  rt_begin, rt_end;
   gettimeofday(&rt_begin, NULL);
       	
   char *outfilename = new char[MAXNAMESIZE];
@@ -2065,7 +2068,7 @@ int main(int argc, char **argv)
 #endif
 
 
-  gettimeofday(&rt_end, NULL);
+  // gettimeofday(&rt_end, NULL);
   uint64_t run_time = (rt_end.tv_sec - rt_begin.tv_sec)*1000000 + (rt_end.tv_usec - rt_begin.tv_usec);
   printf("streamcluster runtime: %lu usec\n", run_time);
 

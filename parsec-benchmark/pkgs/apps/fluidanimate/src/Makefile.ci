@@ -55,8 +55,13 @@ fluidanimate_llvm_all.ll: $(INTERMEDIATE_FILES)
 fluidanimate_llvm_opt.ll: fluidanimate_llvm_all.ll
 	opt-9 $(OPT_FLAGS) -S $^ -o $@
 
+ifeq ($(UINTR),1)
+fluidanimate_llvm_ci.ll: fluidanimate_llvm_opt.ll
+	cp $< $@
+else
 fluidanimate_llvm_ci.ll: fluidanimate_llvm_opt.ll
 	opt-9 $(CI_PASS_OPT) < $< > $@
+endif
 
 $(LLVM_TARGET): fluidanimate_llvm_ci.ll
 	clang++-9 $(PARSEC_FLAGS) $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(EXTRA_FLAGS) -o $@ $^

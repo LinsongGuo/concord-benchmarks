@@ -71,6 +71,8 @@ INTERMEDIATE_FILES := $(patsubst %.c, llvm_%.ll, $(SRC_FILES))
 PROGS = pca pca-seq pca-pthread
 PROGS = pca
 
+OPT_FLAGS := -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
+
 .PHONY: default all clean
 
 default: all

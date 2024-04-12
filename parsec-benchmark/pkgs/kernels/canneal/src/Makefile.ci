@@ -44,8 +44,13 @@ canneal_llvm_all.ll: $(INTERMEDIATE_FILES)
 canneal_llvm_opt.ll: canneal_llvm_all.ll
 	opt-9 $(OPT_FLAGS) -S $^ -o $@
 
+ifeq ($(UINTR),1)
+canneal_llvm_ci.ll: canneal_llvm_opt.ll
+	cp $< $@
+else
 canneal_llvm_ci.ll: canneal_llvm_opt.ll
 	opt-9 $(CI_PASS_OPT) < $< > $@
+endif
 
 $(LLVM_TARGET): canneal_llvm_ci.ll
 	clang++-9 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) -o $@ $^

@@ -1,7 +1,8 @@
 
 # ==== CONCORD Start ====
 ifeq ($(ACCURACY_TEST), 0) 
-CONCORD_LIB = ${CONCORD_LIB_PATH}/concord.a
+#CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_pthread.o -Wl,--wrap=pthread_create
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord.o
 else
 CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.a
 endif
@@ -24,6 +25,8 @@ UNROLL_COUNT ?= 0
 
 ifeq ($(UNROLL_COUNT), 0)
 export OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
+else ifeq ($(UINTR), 1)
+export OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
 else
 export OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution -loop-unroll -unroll-allow-partial -unroll-count=$(UNROLL_COUNT)
 endif
@@ -33,7 +36,7 @@ EXTRA_FLAGS ?= -DAVG_STATS
 CFLAGS := -O3 -pthread -D_POSIX_C_SOURCE=200112 -integrated-as -msoft-float -D_GNU_SOURCE
 CFLAGS += -Wall -W -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls -Wdisabled-optimization
 CFLAGS += -Wpadded -Winline -Wpointer-arith -Wsign-compare -Wendif-labels
-CFLAGS += $(EXTRA_FLAGS)
+#CFLAGS += $(EXTRA_FLAGS)
 CFLAGS +=  -I../../ -I../../../
 LDFLAGS := -lm -lpapi -lpfm $(CONCORD_LIB)
 

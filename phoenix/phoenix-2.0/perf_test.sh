@@ -39,7 +39,7 @@ dry_run() {
       command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program 1000 100 0 > /dev/null 2>&1"
     ;;
     reverse_index)
-      command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/www.stanford.edu/dept/news/ > /dev/null 2>&1"
+      command="MR_NUMTHREADS=1 $ts timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/www.stanford.edu/dept/news/ > /dev/null 2>&1"
     ;;
   esac
   echo "Dry run: "$command >> $DEBUG_FILE
@@ -52,6 +52,8 @@ get_time() {
   rm -f out
   threads=$2
   program=$1
+
+  ts="taskset -c 4,6,8"
 
   DIVISOR=`expr $RUNS \* 1000`
   rm -f sum
@@ -84,12 +86,13 @@ get_time() {
         command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program 1000 100 0 > out 2>&1"
       ;;
       reverse_index)
-        command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/www.stanford.edu/dept/news/ > out 2>&1"
+        command="MR_NUMTHREADS=$threads $ts timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/www.stanford.edu/dept/news/ > out 2>&1"
       ;;
     esac
     echo $command >> $DEBUG_FILE
     eval $command
-    time_in_us=`cat out | grep "$program runtime: " | cut -d ':' -f 2 | cut -d ' ' -f 2 | tr -d '[:space:]'`
+    # time_in_us=`cat out | grep "$program runtime: " | cut -d ':' -f 2 | cut -d ' ' -f 2 | tr -d '[:space:]'`
+    time_in_us=`cat out | grep "library: " | tail -n 1 | cut -d ':' -f 2 | cut -d ' ' -f 2 | tr -d '[:space:]'`
     echo $time_in_us | tr -d '\n' >> sum
     echo $time_in_us >> median
     in_ms=`echo "scale=2;($time_in_us/1000)" | bc`
@@ -157,7 +160,7 @@ perf_test() {
   #run original 
   echo "Building original program: " | tee -a $DEBUG_FILE
   make -f Makefile.orig clean >$BUILD_DEBUG_ORIG_FILE 2>$BUILD_ERROR_ORIG_FILE
-  make -f Makefile.orig >$BUILD_DEBUG_ORIG_FILE 2>$BUILD_ERROR_ORIG_FILE
+  ORIG=1 make -f Makefile.orig >$BUILD_DEBUG_ORIG_FILE 2>$BUILD_ERROR_ORIG_FILE
   echo "Running original program: " | tee -a $DEBUG_FILE
   for thread in $THREADS
   do
@@ -189,7 +192,7 @@ perf_test() {
   #run naive
   echo "Building naive program: " | tee -a $DEBUG_FILE
   make -f Makefile.lc clean >$BUILD_DEBUG_FILE 2>$BUILD_ERROR_FILE
-  ACCURACY_TEST=$ACCURACY_TEST CONCORD_PASS_TYPE=$CONCORD_PASS_TYPE UNROLL_COUNT=$UNROLL_COUNT make -f Makefile.lc >$BUILD_DEBUG_FILE 2>$BUILD_ERROR_FILE
+  UINTR=1 ACCURACY_TEST=$ACCURACY_TEST CONCORD_PASS_TYPE=$CONCORD_PASS_TYPE UNROLL_COUNT=$UNROLL_COUNT make -f Makefile.lc >$BUILD_DEBUG_FILE 2>$BUILD_ERROR_FILE
   echo "Running naive program: " | tee -a $DEBUG_FILE
   for thread in $THREADS
   do

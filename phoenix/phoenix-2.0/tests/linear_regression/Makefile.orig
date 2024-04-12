@@ -63,6 +63,8 @@ INTERMEDIATE_FILES := $(patsubst %.c, llvm_%.ll, $(SRC_FILES))
 PROGS = linear_regression linear_regression-seq linear_regression-pthread
 PROGS = linear_regression
 
+OPT_FLAGS := -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
+
 .PHONY: default all clean
 
 default: all

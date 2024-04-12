@@ -7,19 +7,20 @@ SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 unroll_configs = {}
 # overhead_results = "overhead_results--default.txt"
-overhead_results = "overhead_results-config-default-origflags-2.txt"
+overhead_results = "overhead_results-uintr-5.txt"
+# overhead_results = "overhead_results.txt"
 # overhead_results = "overhead_results-config-default-nodispatcher-origflags-2.txt"
 benchs = [
     {
         "name": "splash2",
         "path": "splash2/codes/",
-        # "benchs": [ "fmm"]
+        # "benchs": ["lu-c"]
         "benchs": ["water-nsquared", "water-spatial", "ocean-cp", "ocean-ncp", "volrend", "fmm", "raytrace", "radix", "fft", "lu-c", "lu-nc", "cholesky", "radiosity"]
     },
     {
         "name": "phoenix",
         "path": "phoenix/phoenix-2.0/",
-        # "benchs": [ "histogram"]
+        # "benchs": [ "pca", "word_count"]
         "benchs": ["histogram", "kmeans", "pca", "string_match", "linear_regression", "word_count", "matrix_multiply", "reverse_index"]
     },
     {
@@ -43,7 +44,7 @@ def run_bench(bench_category, bench_name, accuracy=0, pass_type="cache"):
 
     os.chdir(os.path.join(SCRIPT_DIR, bench_category["path"]))
 
-    cmd = f" RUNS={1 if accuracy else 21 } \
+    cmd = f" RUNS={1 if accuracy else 1 } \
                                         MODIFIED_SUBLOOP_COUNT={int(unroll_configs[bench_name][1])} \
                                         UNROLL_COUNT={int(unroll_configs[bench_name][0])} \
                                         ACCURACY_TEST={accuracy} CONCORD_PASS_TYPE={pass_type} \
@@ -96,6 +97,6 @@ if __name__ == "__main__":
 
     # run_category(benchs[0], timeliness=True, overhead=False)
     # run_category(benchs[2], timeliness=True, overhead=False)
-    # run_category(benchs[0], timeliness=False, overhead=True)
+    run_category(benchs[0], timeliness=False, overhead=True)
     # run_category(benchs[1], timeliness=False, overhead=True)
-    run_category(benchs[2], timeliness=False, overhead=True)
+    # run_category(benchs[2], timeliness=False, overhead=True)
