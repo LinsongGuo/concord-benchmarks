@@ -7,3 +7,5 @@ results
 *.bc
 *.ll
 *.a
+
+__pycache__

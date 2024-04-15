@@ -82,7 +82,7 @@ PATH_OUT = ./$(OSTYPE)/
 
 OPT_FLAGS = -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
 
-CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_base.o
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_base.o -Wl,--wrap=pthread_create
 
 CFLAGS += -Wall $(ARCH) -O3 -D_GNU_SOURCE $(EXTRA_FLAGS) -DREVERSE_INDEX -I$(CI_LIB_HOME)/src -I$(CI_HOME)
 #LIBS = -lm -lpthread -lrt -lcpc

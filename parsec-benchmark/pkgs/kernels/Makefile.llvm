@@ -7,7 +7,7 @@
 CI_LIB_HOME := $(shell pwd)/../../../../../
 CI_HOME := $(shell pwd)/../../../
 
-CONCORD_LIB := ${CONCORD_LIB_PATH}/concord_base.o
+CONCORD_LIB := ${CONCORD_LIB_PATH}/concord_base.o -Wl,--wrap=pthread_create
 
 CXXFLAGS += -I$(CI_LIB_HOME)/src -I$(CI_HOME)
 LDFLAGS := -lm -lpapi -lpfm $(CONCORD_LIB)

@@ -36,9 +36,8 @@ DISABLE_BOUNDED_LOOP ?= 1
 
 # ==== CONCORD Start ====
 ifeq ($(ORIG), 1)
-CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_base.o
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_base.o -Wl,--wrap=pthread_create
 else ifeq ($(ACCURACY_TEST), 0) 
-# CONCORD_LIB = ${CONCORD_LIB_PATH}/concord.o
 CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_pthread.o -Wl,--wrap=pthread_create
 else
 CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.a

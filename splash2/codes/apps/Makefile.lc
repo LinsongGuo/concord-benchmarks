@@ -2,8 +2,7 @@
 
 # ==== CONCORD Start ====
 ifeq ($(ACCURACY_TEST), 0) 
-#CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_pthread.o -Wl,--wrap=pthread_create
-CONCORD_LIB = ${CONCORD_LIB_PATH}/concord.o
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord.o -Wl,--wrap=pthread_create
 else
 CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.a
 endif
