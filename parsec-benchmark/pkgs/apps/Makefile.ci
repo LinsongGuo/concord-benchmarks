@@ -53,7 +53,7 @@ BUILD_LOG ?= make_log
 ERROR_LOG ?= make_error
 REDIRECT ?= >> $(BUILD_LOG) 2>>$(ERROR_LOG)
 
-.PHONY: blackscholes fluidanimate swaptions 
+.PHONY: blackscholes fluidanimate swaptions freqmine
 
 default: all
 
@@ -68,6 +68,8 @@ fluidanimate: $(CI_LIB)
 swaptions: $(CI_LIB) 
 	@$(MAKE) -C $@/src -f Makefile.$(SUFFIX) $@_$(SUFFIX) --no-print-directory $(REDIRECT)
 
+#freqmine: $(CI_LIB)
+#	@$(MAKE) -C $@/src -f Makefile.$(SUFFIX) $@_$(SUFFIX) --no-print-directory $(REDIRECT)
 
 clean: blackscholes-clean fluidanimate-clean swaptions-clean  
 
@@ -80,3 +82,5 @@ fluidanimate-clean:
 swaptions-clean:
 	@$(MAKE) -C swaptions/src clean -f Makefile.$(SUFFIX) --no-print-directory $(REDIRECT)
 
+#freqmine-clean:
+#	@$(MAKE) -C freqmine/src clean -f Makefile.$(SUFFIX) --no-print-directory $(REDIRECT)

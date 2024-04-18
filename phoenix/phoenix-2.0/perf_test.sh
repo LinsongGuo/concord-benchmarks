@@ -192,7 +192,7 @@ perf_test() {
   #run naive
   echo "Building naive program: " | tee -a $DEBUG_FILE
   make -f Makefile.lc clean >$BUILD_DEBUG_FILE 2>$BUILD_ERROR_FILE
-  UINTR=1 ACCURACY_TEST=$ACCURACY_TEST CONCORD_PASS_TYPE=$CONCORD_PASS_TYPE UNROLL_COUNT=$UNROLL_COUNT make -f Makefile.lc >$BUILD_DEBUG_FILE 2>$BUILD_ERROR_FILE
+  UINTR=0 ACCURACY_TEST=$ACCURACY_TEST CONCORD_PASS_TYPE=$CONCORD_PASS_TYPE UNROLL_COUNT=$UNROLL_COUNT make -f Makefile.lc >$BUILD_DEBUG_FILE 2>$BUILD_ERROR_FILE
   echo "Running naive program: " | tee -a $DEBUG_FILE
   for thread in $THREADS
   do

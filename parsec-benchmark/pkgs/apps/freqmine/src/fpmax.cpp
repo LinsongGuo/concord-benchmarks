@@ -51,8 +51,8 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include "common.h"
 
 #ifdef CI_PASS
-#include "../../TriggerAction.h"
-#include "../../TriggerActionDecl.h"
+#include "TriggerAction.h"
+#include "TriggerActionDecl.h"
 #endif
 
 using namespace std;

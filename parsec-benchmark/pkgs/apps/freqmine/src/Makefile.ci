@@ -9,7 +9,7 @@ CXXFLAGS += -Wno-deprecated
 LLVM_BUILD_PATH	= /mnt/nilanjana/
 LLVM_SRC_PATH	= /home/nbasu4/logicalclock/ci-llvm-v9/
 CONFIG_FILE	= $(LLVM_SRC_PATH)/test-suite/lc-config.txt
-LLVM_TARGET 	= freqmine_llvm
+LLVM_TARGET 	= freqmine_ci
 OPT_FLAGS	= -postdomtree -mem2reg -indvars -loop-simplify -branch-prob -scalar-evolution
 LOCAL_PATH	= /AD-home/cmonta9/parsec-benchmark/pkgs/apps/freqmine/inst/amd64-linux.gcc
 
@@ -21,11 +21,11 @@ CLOCK 			?= 1 # Periodic CI
 FIBER_CONFIG 		?= 5
 CONFIG 			?= 2
 
-CXXFLAGS_LLVM		+= -O3 -DCI_PASS $(CXXFLAGS)
+CXXFLAGS_LLVM		+= -O3 $(CXXFLAGS)
 SRC_FILES_C		= $(wildcard ./*.cpp)
 INTERMEDIATE_FILES 	= $(patsubst ./%.cpp, ./llvm_%.ll, $(SRC_FILES_C))
 
-CI_PASS_OPT = -load $(LLVM_BUILD_PATH)/lib/LLVMLogicalClockParsec.so -S -logicalclock -clock-type $(CLOCK) -config $(CONFIG) -inst-gran 1 -all-dev $(ALLOWED_DEVIATION) -push-intv $(PUSH_INTV) -commit-intv $(CMMT_INTV) -mem-ops-cost 1 -fiber-config $(FIBER_CONFIG) -config-file $(CONFIG_FILE) 
+CI_PASS_OPT ?= -load $(LLVM_BUILD_PATH)/lib/LLVMLogicalClockParsec.so -S -logicalclock -clock-type $(CLOCK) -config $(CONFIG) -inst-gran 1 -all-dev $(ALLOWED_DEVIATION) -push-intv $(PUSH_INTV) -commit-intv $(CMMT_INTV) -mem-ops-cost 1 -fiber-config $(FIBER_CONFIG) -config-file $(CONFIG_FILE) 
 
 
 all: $(TARGET)
@@ -65,9 +65,10 @@ freqmine_llvm_opt.ll: freqmine_llvm_all.ll
 	opt-9 $(OPT_FLAGS) -S $^ -o $@
 
 freqmine_llvm_ci.ll: freqmine_llvm_opt.ll
-	opt-9 $(CI_PASS_OPT) < $< > $@
+	cp $< $@
+	# opt-9 $(CI_PASS_OPT) < $< > $@
 
-freqmine_llvm: freqmine_llvm_ci.ll
+$(LLVM_TARGET): freqmine_llvm_ci.ll
 	clang++-9 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(EXTRA_FLAGS) -o $@ $^
 
 clean:

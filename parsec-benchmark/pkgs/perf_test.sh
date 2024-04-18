@@ -198,6 +198,7 @@ perf_test() {
     do
       PER_THREAD_STAT_FILE="$DIR/parsec-perf_stats-th$thread-ad$AD.txt"
       orig_time=$(get_time $bench $thread 0 0)
+      # orig_time=1
       echo -ne "$bench" >> $PER_THREAD_STAT_FILE
       echo -ne "\t$orig_time" >> $PER_THREAD_STAT_FILE
       echo -e "$thread\t$orig_time" >> $PER_BENCH_ORIG_STAT_FILE
@@ -208,11 +209,12 @@ perf_test() {
     #4. Build original program with Naive CI
     echo "Building original program with Naive CI: " | tee -a $DEBUG_FILE $BUILD_DEBUG_FILE $BUILD_ERROR_FILE >/dev/null
     ACCURACY_TEST=$ACCURACY_TEST CONCORD_PASS_TYPE=$CONCORD_PASS_TYPE UNROLL_COUNT=$UNROLL_COUNT BUILD_LOG=$BUILD_DEBUG_FILE ERROR_LOG=$BUILD_ERROR_FILE make -f Makefile.ci ${bench}-clean
-    UINTR=1 ACCURACY_TEST=$ACCURACY_TEST CONCORD_PASS_TYPE=$CONCORD_PASS_TYPE UNROLL_COUNT=$UNROLL_COUNT BUILD_LOG=$BUILD_DEBUG_FILE ERROR_LOG=$BUILD_ERROR_FILE PROFILE_FLAGS="-DAVG_STATS" make -f Makefile.ci ${bench}
+    UINTR=0 ACCURACY_TEST=$ACCURACY_TEST CONCORD_PASS_TYPE=$CONCORD_PASS_TYPE UNROLL_COUNT=$UNROLL_COUNT BUILD_LOG=$BUILD_DEBUG_FILE ERROR_LOG=$BUILD_ERROR_FILE PROFILE_FLAGS="-DAVG_STATS" make -f Makefile.ci ${bench}
     for thread in $THREADS
     do
       PER_THREAD_STAT_FILE="$DIR/parsec-perf_stats-th$thread-ad$AD.txt"
       lc_naive_time=$(get_time $bench $thread 1 0)
+      # lc_naive_time=1
       echo -ne "\t$lc_naive_time" >> $PER_THREAD_STAT_FILE
       echo -e "$thread\t$lc_naive_time" >> $PER_BENCH_NAIVE_STAT_FILE
       echo -e "$thread, $lc_naive_time (lc-naive)" >> $LOG_FILE

@@ -6,28 +6,30 @@ import re
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 unroll_configs = {}
-# overhead_results = "overhead_results--default.txt"
-overhead_results = "overhead_results.txt"
+# overhead_results = "overhead_results-concord-5-default.txt"
+# overhead_results = "overhead_results-uintr.txt"
+overhead_results = "overhead_results-concord.txt"
 # overhead_results = "overhead_results.txt"
 # overhead_results = "overhead_results-config-default-nodispatcher-origflags-2.txt"
 benchs = [
     {
         "name": "splash2",
         "path": "splash2/codes/",
-        # "benchs": ["radix"]
+        #"benchs": ["ocean-ncp"]
+        # "benchs": ["water-nsquared", "water-spatial", "volrend", "fmm", "raytrace", "radix", "fft", "lu-c", "lu-nc", "cholesky", "radiosity"]
         "benchs": ["water-nsquared", "water-spatial", "ocean-cp", "ocean-ncp", "volrend", "fmm", "raytrace", "radix", "fft", "lu-c", "lu-nc", "cholesky", "radiosity"]
     },
     {
         "name": "phoenix",
         "path": "phoenix/phoenix-2.0/",
-        # "benchs": [  "pca"]
+        #"benchs": ["reverse_index"]
         "benchs": ["histogram", "kmeans", "pca", "string_match", "linear_regression", "word_count", "matrix_multiply", "reverse_index"]
     },
     {
         "name": "parsec",
         "path": "parsec-benchmark/pkgs/",
-        # "benchs":  [ "streamcluster"]
-        "benchs": ["blackscholes", "fluidanimate", "swaptions", "canneal", "streamcluster", "dedup"]
+        #"benchs":  [ "streamcluster"]
+         "benchs": ["blackscholes", "fluidanimate", "swaptions", "canneal", "streamcluster", "dedup"]
     }
 ]
 
@@ -44,9 +46,9 @@ def run_bench(bench_category, bench_name, accuracy=0, pass_type="cache"):
 
     os.chdir(os.path.join(SCRIPT_DIR, bench_category["path"]))
 
-    runs = 21 if bench_name in ['dedup', 'streamcluster', 'word_count', 'reverse_index', 'kmeans', 'pca'] else 1
+    runs = 21 if bench_name in ['fluidanimate', 'dedup', 'streamcluster', 'word_count', 'reverse_index', 'kmeans', 'pca'] else 5
     if bench_name == 'canneal':
-        runs = 11
+        runs = 9
     cmd = f" RUNS={1 if accuracy else runs } \
                                         MODIFIED_SUBLOOP_COUNT={int(unroll_configs[bench_name][1])} \
                                         UNROLL_COUNT={int(unroll_configs[bench_name][0])} \
