@@ -309,6 +309,21 @@ int tpool_destroy (tpool_t *tpool)
     return result;
 }
 
+#include <signal.h>
+void signal_block() {
+    sigset_t mask;
+    sigemptyset(&mask);
+    sigaddset(&mask, SIGUSR1);
+    pthread_sigmask(SIG_BLOCK, &mask, NULL);
+}
+
+void signal_unblock(void) {
+    sigset_t mask;
+    sigemptyset(&mask);
+    sigaddset(&mask, SIGUSR1);
+    pthread_sigmask(SIG_UNBLOCK, &mask, NULL);
+}
+
 static void* thread_loop (void *arg)
 {
     thread_arg_t    *thread_arg = arg;
@@ -325,7 +340,9 @@ static void* thread_loop (void *arg)
     while (1)
     {
 #ifndef LIBFIBER
+        signal_block();
         CHECK_ERROR (sem_wait (&thread_arg->sem_run));
+        signal_unblock();
 #else
         fiber_semaphore_wait(&thread_arg->sem_run);
 #endif
