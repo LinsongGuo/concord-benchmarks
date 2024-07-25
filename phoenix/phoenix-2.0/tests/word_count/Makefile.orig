@@ -81,7 +81,7 @@ opt_word_count-all.ll: llvm_word_count-all.ll
 	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 llvm_word_count-all.ll: word_count.ll sort.ll
-	llvm-link-9 $^ -o $@
+	llvm-link-11 $^ -o $@
 
 
 word_count-seq: $(WC_SEQ_OBJS)
@@ -104,7 +104,7 @@ opt_word_count-pthread-all.ll: llvm_word_count-pthread-all.ll
 	$(OPT) $(OPT_FLAGS) -S < $< > $@
 
 llvm_word_count-pthread-all.ll: word_count-pthread.ll sort-pthread.ll
-	llvm-link-9 $^ -o $@
+	llvm-link-11 $^ -o $@
 
 
 $(INTERMEDIATE_FILES): %.ll : %.c

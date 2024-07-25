@@ -1169,7 +1169,7 @@ void *AdvanceFramesMT(void *args)
   for(int i = 0; i < targs->frames; ++i) {
     AdvanceFrameMT(targs->tid);
   }
-  
+
 #ifdef CI_PASS
   print_timing_stats();
 #endif
@@ -1210,6 +1210,7 @@ void AdvanceFrameVisualization()
 
 ////////////////////////////////////////////////////////////////////////////////
 
+
 int main(int argc, char *argv[])
 {
 
@@ -1219,7 +1220,7 @@ int main(int argc, char *argv[])
 #endif 
 
   struct timeval  rt_begin, rt_end;
-  // gettimeofday(&rt_begin, NULL);
+  gettimeofday(&rt_begin, NULL);
 
 
 #ifdef PARSEC_VERSION
@@ -1257,7 +1258,6 @@ int main(int argc, char *argv[])
 #endif
 
   InitSim(argv[3], threadnum);
-  gettimeofday(&rt_begin, NULL);
 #ifdef ENABLE_VISUALIZATION
   InitVisualizationMode(&argc, argv, &AdvanceFrameVisualization, &numCells, &cells, &cnumPars);
 #endif
@@ -1288,7 +1288,6 @@ int main(int argc, char *argv[])
   __parsec_roi_end();
 #endif
 
-  gettimeofday(&rt_end, NULL);
 
   if(argc > 4)
     SaveFile(argv[4]);
@@ -1299,7 +1298,7 @@ int main(int argc, char *argv[])
 #endif
 
 
-  //  gettimeofday(&rt_end, NULL);
+   gettimeofday(&rt_end, NULL);
    uint64_t run_time = (rt_end.tv_sec - rt_begin.tv_sec)*1000000 + (rt_end.tv_usec - rt_begin.tv_usec);
    printf("fluidanimate runtime: %lu usec\n", run_time);
 

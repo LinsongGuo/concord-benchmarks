@@ -32,9 +32,9 @@
 # Note: This Makefile requires GNU make.
 #------------------------------------------------------------------------------
 
-CC := clang-9
-OPT := opt-9
-LLVM_LINK := llvm-link-9
+CC := clang-11
+OPT := opt-11
+LLVM_LINK := llvm-link-11
 
 OSTYPE = $(shell uname)
 
@@ -99,7 +99,7 @@ endif
 ifeq ($(ACCURACY_TEST), 0) 
 CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_pthread.o -Wl,--wrap=pthread_create
 else
-CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.a
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.a -Wl,--wrap=pthread_create
 endif
 
 MODIFIED_SUBLOOP_COUNT ?= 200

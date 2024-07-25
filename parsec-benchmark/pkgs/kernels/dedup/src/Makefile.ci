@@ -63,33 +63,33 @@ $(TARGET): $(DEDUP_OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(DEDUP_OBJ) $(LIBS)
 
 $(INTERMEDIATE_FILES): llvm_%.ll : %.c
-	clang-9 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) -S -emit-llvm -o $@ $<
+	clang-11 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) -S -emit-llvm -o $@ $<
 
 dedup_llvm_all.ll: $(INTERMEDIATE_FILES)
-	llvm-link-9 $^ -o $@
+	llvm-link-11 $^ -o $@
 
 dedup_llvm_opt.ll: dedup_llvm_all.ll
-	opt-9 $(OPT_FLAGS) -S $^ -o $@
+	opt-11 $(OPT_FLAGS) -S $^ -o $@
 
 ifeq ($(UINTR),1)
 dedup_llvm_ci.ll: dedup_llvm_opt.ll
 	cp $< $@
 else
 dedup_llvm_ci.ll: dedup_llvm_opt.ll
-	opt-9 $(CI_PASS_OPT) < $< > $@
+	opt-11 $(CI_PASS_OPT) < $< > $@
 endif
 
 $(LLVM_TARGET): dedup_llvm_ci.ll
-	clang-9 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $^ -o $@
+	clang-11 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $^ -o $@
 
 #$(INTERMEDIATE_OPT_FILES): opt_llvm_%.ll : llvm_%.ll
-#	opt-9 $(OPT_FLAGS) -S $< -o $@
+#	opt-11 $(OPT_FLAGS) -S $< -o $@
 #
 #$(INTERMEDIATE_CI_FILES): ci_llvm_%.ll : opt_llvm_%.ll
-#	opt-9 $(CI_PASS_OPT_NO_VAR) < $< > $@
+#	opt-11 $(CI_PASS_OPT_NO_VAR) < $< > $@
 #
 #ci_llvm_dedup.ll: opt_llvm_dedup.ll
-#	opt-9 $(CI_PASS_OPT) < $< > $@
+#	opt-11 $(CI_PASS_OPT) < $< > $@
 #
 #$(LLVM_TARGET): $(INTERMEDIATE_CI_FILES) ci_llvm_dedup.ll
 #	clang-9 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $^ -o $@

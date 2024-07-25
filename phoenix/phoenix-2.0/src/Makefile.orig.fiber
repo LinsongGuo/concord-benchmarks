@@ -82,10 +82,10 @@ phoenix.o: phoenix.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -O3 -relocation-model=pic -filetype=obj $<
 
 phoenix.ll: $(INTERMEDIATE_FILES)
-	llvm-link-9 $^ -o $@
+	llvm-link-11 $^ -o $@
 
 $(INTERMEDIATE_FILES): %.ll : %.c
-	clang-9 -S -emit-llvm $(CFLAGS) -I$(HOME)/$(INC_DIR) -o $@ $<
+	clang-11 -S -emit-llvm $(CFLAGS) -I$(HOME)/$(INC_DIR) -o $@ $<
 
 clean:
 	make -C $(LIBFIBER_PATH) -f Makefile.int clean

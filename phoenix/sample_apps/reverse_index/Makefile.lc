@@ -97,19 +97,19 @@ reverseindex: reverseindex-lc.ll
 	$(CC) $(CFLAGS) -o $@ $< $(LIBS)
 
 reverseindex-lc.ll: reverseindex-opt.ll
-	opt-9 $(LC_FLAGS) $^ -o $@
+	opt-11 $(LC_FLAGS) $^ -o $@
 
 reverseindex-opt.ll: reverseindex-all.ll
-	opt-9 $(OPT_FLAGS) -S $^ -o $@
+	opt-11 $(OPT_FLAGS) -S $^ -o $@
 
 reverseindex-all.ll: $(COM_OBJS) $(REV_OBJS)
-	llvm-link-9 $^ -o $@
+	llvm-link-11 $^ -o $@
 
 $(REV_OBJS): reverseindex.c
-	clang-9 -S -emit-llvm $(CFLAGS) -o $@ $<
+	clang-11 -S -emit-llvm $(CFLAGS) -o $@ $<
 
 $(COM_OBJS): MapReduceScheduler.c
-	clang-9 -S -emit-llvm $(CFLAGS) -o $@ $<
+	clang-11 -S -emit-llvm $(CFLAGS) -o $@ $<
 
 clean:
 	rm -f $(PROGS) *.o *.a *~ *.tmp *.bak *.log *.ll

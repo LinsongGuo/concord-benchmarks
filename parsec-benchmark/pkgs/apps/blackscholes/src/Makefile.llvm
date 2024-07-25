@@ -95,13 +95,13 @@ blackscholes_llvm.m4.cpp: blackscholes_new.m4.cpp
 	$(M4) $(MACROS) $< > $@
 
 blackscholes_llvm.ll: blackscholes_llvm.m4.cpp 
-	clang++-9 -S -emit-llvm $(PARSEC_FLAGS) $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -o $@ $^
+	clang++-11 -S -emit-llvm $(PARSEC_FLAGS) $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -o $@ $^
 
 blackscholes_llvm_opt.ll: blackscholes_llvm.ll
-	opt-9 $(OPT_FLAGS) -S $^ -o $@ 
+	opt-11 $(OPT_FLAGS) -S $^ -o $@ 
 
 $(LLVM_TARGET): blackscholes_llvm_opt.ll
-	clang++-9 $(PARSEC_FLAGS) $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -o $@ $^ 
+	clang++-11 $(PARSEC_FLAGS) $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -o $@ $^ 
 	
 clean:
 	rm -f $(TARGET) $(M4_SRC) $(LLVM_TARGET) *.ll

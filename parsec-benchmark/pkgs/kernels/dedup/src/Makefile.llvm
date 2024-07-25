@@ -59,22 +59,22 @@ $(TARGET): $(DEDUP_OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(DEDUP_OBJ) $(LIBS)
 
 $(INTERMEDIATE_FILES): llvm_%.ll : %.c
-	clang-9 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -S -emit-llvm -o $@ $<
+	clang-11 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -S -emit-llvm -o $@ $<
 
 dedup_llvm_all.ll: $(INTERMEDIATE_FILES)
-	llvm-link-9 $^ -o $@
+	llvm-link-11 $^ -o $@
 
 dedup_llvm_opt.ll: dedup_llvm_all.ll
-	opt-9 $(OPT_FLAGS) -S $^ -o $@
+	opt-11 $(OPT_FLAGS) -S $^ -o $@
 
 $(LLVM_TARGET): dedup_llvm_opt.ll
-	clang-9 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) $^ -o $@
+	clang-11 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) $^ -o $@
 
 #$(INTERMEDIATE_OPT_FILES): opt_llvm_%.ll : llvm_%.ll
-#	opt-9 $(OPT_FLAGS) -S $< -o $@
+#	opt-11 $(OPT_FLAGS) -S $< -o $@
 #
 #$(LLVM_TARGET): $(INTERMEDIATE_OPT_FILES) 
-#	clang-10 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) $^ -o $@
+#	clang-11 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) $^ -o $@
 
 clean:
 	rm -f *~ *.o $(TARGET) *.ll $(LLVM_TARGET)

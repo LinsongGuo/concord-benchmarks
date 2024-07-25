@@ -32,9 +32,9 @@
 # Note: This Makefile requires GNU make.
 #------------------------------------------------------------------------------
 
-CC := clang-9
-OPT := opt-9
-LLVM_LINK := llvm-link-9
+CC := clang-11
+OPT := opt-11
+LLVM_LINK := llvm-link-11
 
 OSTYPE = $(shell uname)
 

@@ -1,6 +1,6 @@
-CC := clang-9
-OPT := opt-9
-LLVM_LINK := llvm-link-9
+CC := clang-11
+OPT := opt-11
+LLVM_LINK := llvm-link-11
 
 TARGET1 := $(TARGET_NAME)-lc
 TARGET2 := $(TARGET_NAME)-orig

@@ -6,30 +6,29 @@ import re
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 unroll_configs = {}
-# overhead_results = "overhead_results-concord-5-default.txt"
 # overhead_results = "overhead_results-uintr.txt"
 overhead_results = "overhead_results-concord.txt"
-# overhead_results = "overhead_results.txt"
-# overhead_results = "overhead_results-config-default-nodispatcher-origflags-2.txt"
+# overhead_results = "overhead_results-signal-lu-c.txt"
+# overhead_results = "overhead_results-concord-test.txt"
 benchs = [
     {
         "name": "splash2",
         "path": "splash2/codes/",
-        #"benchs": ["ocean-ncp"]
-        # "benchs": ["water-nsquared", "water-spatial", "volrend", "fmm", "raytrace", "radix", "fft", "lu-c", "lu-nc", "cholesky", "radiosity"]
-        "benchs": ["water-nsquared", "water-spatial", "ocean-cp", "ocean-ncp", "volrend", "fmm", "raytrace", "radix", "fft", "lu-c", "lu-nc", "cholesky", "radiosity"]
+        # "benchs": ["fmm"]
+        # "ocean-ncp",
+        "benchs": ["water-nsquared", "water-spatial", "ocean-cp",  "volrend", "fmm", "raytrace", "radix", "fft", "lu-c", "lu-nc", "cholesky", "radiosity"]
     },
     {
         "name": "phoenix",
         "path": "phoenix/phoenix-2.0/",
-        #"benchs": ["reverse_index"]
+        # "benchs": ["kmeans"]
         "benchs": ["histogram", "kmeans", "pca", "string_match", "linear_regression", "word_count", "matrix_multiply", "reverse_index"]
     },
     {
         "name": "parsec",
         "path": "parsec-benchmark/pkgs/",
-        #"benchs":  [ "streamcluster"]
-         "benchs": ["blackscholes", "fluidanimate", "swaptions", "canneal", "streamcluster", "dedup"]
+        # "benchs":  [ "fluidanimate"]
+        "benchs": ["blackscholes", "fluidanimate", "swaptions", "canneal", "streamcluster"]
     }
 ]
 
@@ -46,9 +45,15 @@ def run_bench(bench_category, bench_name, accuracy=0, pass_type="cache"):
 
     os.chdir(os.path.join(SCRIPT_DIR, bench_category["path"]))
 
-    runs = 21 if bench_name in ['fluidanimate', 'dedup', 'streamcluster', 'word_count', 'reverse_index', 'kmeans', 'pca'] else 5
+    if bench_name in ['water-nsquared', 'water-spatial', 'ocean-np', 'kmeans', 'streamcluster']:
+        runs = 55
+    elif bench_name in ['fluidanimate', 'dedup', 'streamcluster', 'word_count', 'reverse_index', 'kmeans', 'pca', 'fmm', 'histogram', 'string_match', 'water-nsquared', 'water-spatial', 'ocean-ncp', 'volrend', 'cholesky']:
+        runs = 29
     if bench_name == 'canneal':
-        runs = 9
+        runs = 11
+    else: 
+        runs = 5
+    # runs = 1
     cmd = f" RUNS={1 if accuracy else runs } \
                                         MODIFIED_SUBLOOP_COUNT={int(unroll_configs[bench_name][1])} \
                                         UNROLL_COUNT={int(unroll_configs[bench_name][0])} \
@@ -99,6 +104,8 @@ if __name__ == "__main__":
 
     if not os.path.exists("results"):
         os.mkdir("results")
+
+    # run_category(benchs[0], timeliness=True, overhead=False)
 
     run_category(benchs[0], timeliness=False, overhead=True)
     run_category(benchs[1], timeliness=False, overhead=True)

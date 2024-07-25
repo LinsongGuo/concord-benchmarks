@@ -5,7 +5,7 @@ DISABLE_BOUNDED_LOOP ?= 1
 ifeq ($(ACCURACY_TEST), 0) 
 CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_pthread.o -Wl,--wrap=pthread_create
 else
-CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.o
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.o -Wl,--wrap=pthread_create
 endif
 
 ifeq ($(CONCORD_PASS_TYPE),rdtsc)

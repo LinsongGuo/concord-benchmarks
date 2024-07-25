@@ -52,19 +52,19 @@ $(SRC_INTERMEDIATE_FILES): %.cpp : %.CPP
 	$(M4) $(MACROS) $< > $@
 
 llvm_nr_routines.ll: nr_routines.c
-	clang++-9 $(CXXFLAGS_LLVM) $(LDFLAGS) $(DEF) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -S -emit-llvm -o $@ $^
+	clang++-11 $(CXXFLAGS_LLVM) $(LDFLAGS) $(DEF) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -S -emit-llvm -o $@ $^
 
 $(INTERMEDIATE_FILES): llvm_%.ll : %.cpp
-	clang++-9 $(CXXFLAGS_LLVM) $(LDFLAGS) $(DEF) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -S -emit-llvm -o $@ $<
+	clang++-11 $(CXXFLAGS_LLVM) $(LDFLAGS) $(DEF) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -S -emit-llvm -o $@ $<
 
 swaptions_llvm_all.ll: $(INTERMEDIATE_FILES) llvm_nr_routines.ll
-	llvm-link-9 $^ -o $@
+	llvm-link-11 $^ -o $@
 
 swaptions_llvm_opt.ll: swaptions_llvm_all.ll
-	opt-9 $(OPT_FLAGS) -S $^ -o $@
+	opt-11 $(OPT_FLAGS) -S $^ -o $@
 
 $(LLVM_TARGET): swaptions_llvm_opt.ll
-	clang++-9 $(CXXFLAGS_LLVM) $(LDFLAGS) $(DEF) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -o $@ $^	
+	clang++-11 $(CXXFLAGS_LLVM) $(LDFLAGS) $(DEF) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -o $@ $^	
 
 clean:
 	rm -f $(OBJS) $(EXEC) *.ll $(LLVM_TARGET) $(SRC_INTERMEDIATE_FILES)

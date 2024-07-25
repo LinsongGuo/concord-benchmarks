@@ -83,16 +83,16 @@ lc_all.o: lc_all.ll
 	$(LLVM_BUILD)/bin/$(CNC_LLC) -relocation-model=pic -filetype=obj $<
 
 lc_all.ll: opt_all.ll
-	opt-9 $(SRC_LC_FLAGS) -defclock=false -out-cost-file ./cost.txt < $< > $@
+	opt-11 $(SRC_LC_FLAGS) -defclock=false -out-cost-file ./cost.txt < $< > $@
 
 opt_all.ll: llvm_all.ll
-	opt-9 $(OPT_FLAGS) -S < $< > $@
+	opt-11 $(OPT_FLAGS) -S < $< > $@
 
 llvm_all.ll: $(INTERMEDIATE_FILES)
-	llvm-link-9 $^ -o $@
+	llvm-link-11 $^ -o $@
 
 $(INTERMEDIATE_FILES): llvm_%.ll : %.c
-	clang-9 -S -emit-llvm $(CFLAGS) -I$(HOME)/$(INC_DIR) -o $@ $<
+	clang-11 -S -emit-llvm $(CFLAGS) -I$(HOME)/$(INC_DIR) -o $@ $<
 
 clean:
 	make -C $(LIBFIBER_PATH) -f Makefile.int clean

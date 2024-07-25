@@ -5,6 +5,7 @@ AD=100
 CUR_PATH=`pwd`
 SUB_DIR="${SUB_DIR:-""}"
 DIR=$CUR_PATH/phoenix_stats/$SUB_DIR
+ACCURACY_DIR=$CUR_PATH/accuracy/$SUB_DIR
 THREADS="${THREADS:-"1"}"
 
 UNROLL_COUNT="${UNROLL_COUNT:-"0"}"
@@ -219,9 +220,9 @@ perf_test() {
       naive_times[$arr_index_naive]=$naive_time
       arr_index_naive=$((arr_index_naive+1))
 
-      ACCURACY_FILE="$DIR/accuracy-$bench.txt"
-      cp ${CONCORD_TIMESTAMP_PATH} $ACCURACY_FILE
-      rm ${CONCORD_TIMESTAMP_PATH}
+      ACCURACY_FILE="$ACCURACY_DIR/$bench"
+      mv ${CONCORD_TIMESTAMP_PATH} $ACCURACY_FILE
+      # rm ${CONCORD_TIMESTAMP_PATH}
     done
   done
 
@@ -260,6 +261,7 @@ echo "Note: Script has performance tests for both instantaneous & predictive clo
 echo "Configured values:-"
 echo "WARNING: Remove Passed Config if you don't need it!"
 mkdir -p $DIR;
+mkdir -p $ACCURACY_DIR
 
 if [ $# -eq 0 ]; then
   run_perf_test

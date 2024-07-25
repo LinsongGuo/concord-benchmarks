@@ -4,7 +4,7 @@
 ifeq ($(ACCURACY_TEST), 0) 
 CONCORD_LIB = ${CONCORD_LIB_PATH}/concord.o -Wl,--wrap=pthread_create
 else
-CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.a
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.a -Wl,--wrap=pthread_create
 endif
 
 MODIFIED_SUBLOOP_COUNT ?= 200

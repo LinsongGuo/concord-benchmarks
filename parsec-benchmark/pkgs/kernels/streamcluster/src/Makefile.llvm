@@ -34,16 +34,16 @@ all: $(OBJS)
 	$(CXX) $(CXXFLAGS) -c $<
 
 $(INTERMEDIATE_FILES): llvm_%.ll : %.cpp
-	clang++-9 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -S -emit-llvm -o $@ $<
+	clang++-11 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -S -emit-llvm -o $@ $<
 
 streamcluster_llvm_all.ll: $(INTERMEDIATE_FILES)
-	llvm-link-9 $^ -o $@
+	llvm-link-11 $^ -o $@
 
 streamcluster_llvm_opt.ll: streamcluster_llvm_all.ll
-	opt-9 $(OPT_FLAGS) -S $^ -o $@
+	opt-11 $(OPT_FLAGS) -S $^ -o $@
 
 $(LLVM_TARGET): streamcluster_llvm_opt.ll
-	clang++-9 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -o $@ $^
+	clang++-11 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -o $@ $^
 
 clean:
 	rm -f *.o $(TARGET) *.ll $(LLVM_TARGET)

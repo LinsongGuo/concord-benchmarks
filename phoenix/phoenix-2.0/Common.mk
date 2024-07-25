@@ -44,10 +44,10 @@ $(TARGET2).so: phoenix.o
 	$(CC) --shared -o $@ $<
 
 phoenix-lc.o: lc_all.ll
-	$(LLVM_BUILD)/bin/llc-9 -relocation-model=pic -filetype=obj $< -o $@
+	llc-11 -relocation-model=pic -filetype=obj $< -o $@
 
 phoenix.o: opt_all.ll
-	$(LLVM_BUILD)/bin/llc-9 -relocation-model=pic -filetype=obj $< -o $@
+	llc-11 -relocation-model=pic -filetype=obj $< -o $@
 
 lc_all.ll: opt_simplified.ll
 	$(LLVM_BUILD)/bin/opt $(SRC_LC_FLAGS) < $< > $@

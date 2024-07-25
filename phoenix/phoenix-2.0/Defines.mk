@@ -40,7 +40,7 @@ CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_base.o -Wl,--wrap=pthread_create
 else ifeq ($(ACCURACY_TEST), 0) 
 CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_pthread.o -Wl,--wrap=pthread_create
 else
-CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.a
+CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.a -Wl,--wrap=pthread_create
 endif
 
 ifeq ($(CONCORD_PASS_TYPE),rdtsc)
@@ -66,7 +66,7 @@ endif
 
 ifeq ($(OSTYPE),Linux)
 OS = -D_LINUX_
-CC = clang-9
+CC = clang-11
 #DEBUG = -g
 CFLAGS = -Wall $(OS) $(DEBUG) -O3 -D_GNU_SOURCE
 LIBS = -pthread -lpapi
@@ -75,7 +75,7 @@ endif
 ifeq ($(OSTYPE),SunOS)
 OS =  -D_SOLARIS_
 #CC = cc
-CC = clang-9 
+CC = clang-11 
 #DEBUG = -g
 CFLAGS = -Wall $(OS) $(DEBUG) -O3 -D_FILE_OFFSET_BITS=64
 LIBS = -lm -lrt -lthread -lmtmalloc -llgrp
@@ -95,9 +95,9 @@ ifeq ($(shell uname -m),x86_64)
 ARCH = -D__x86_64__
 endif
 
-CC := clang-9
-OPT := opt-9
-LLVM_LINK := llvm-link-9
+CC := clang-11
+OPT := opt-11
+LLVM_LINK := llvm-link-11
 #CC := /mnt/nilanjana/bin/clang
 #OPT := /mnt/nilanjana/bin/opt
 #LLVM_LINK := /mnt/nilanjana/bin/llvm-link

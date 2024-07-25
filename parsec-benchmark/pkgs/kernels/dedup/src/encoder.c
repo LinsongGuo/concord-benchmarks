@@ -70,10 +70,12 @@ void test_3(){
 #endif
 
 //The configuration block defined in main
-config_t * conf;
+// config_t * conf;
 
 //Hash table data structure & utility functions
-struct hashtable *cache;
+struct hashtable *cache2;
+
+struct timeval  rt_begin, rt_end;
 
 static unsigned int hash_from_key_fn( void *k ) {
   //NOTE: sha1 sum is integer-aligned
@@ -501,24 +503,24 @@ int sub_Deduplicate(chunk_t *chunk) {
 
   //Query database to determine whether we've seen the data chunk before
 #ifdef ENABLE_PTHREADS
-  pthread_mutex_t *ht_lock = hashtable_getlock(cache, (void *)(chunk->sha1));
+  pthread_mutex_t *ht_lock = hashtable_getlock(cache2, (void *)(chunk->sha1));
   pthread_mutex_lock(ht_lock);
 #endif
-  entry = (chunk_t *)hashtable_search(cache, (void *)(chunk->sha1));
+  entry = (chunk_t *)hashtable_search(cache2, (void *)(chunk->sha1));
   isDuplicate = (entry != NULL);
   chunk->header.isDuplicate = isDuplicate;
   if (!isDuplicate) {
-    // Cache miss: Create entry in hash table and forward data to compression stage
+    // cache2 miss: Create entry in hash table and forward data to compression stage
 #ifdef ENABLE_PTHREADS
     pthread_mutex_init(&chunk->header.lock, NULL);
     pthread_cond_init(&chunk->header.update, NULL);
 #endif
     //NOTE: chunk->compressed_data.buffer will be computed in compression stage
-    if (hashtable_insert(cache, (void *)(chunk->sha1), (void *)chunk) == 0) {
+    if (hashtable_insert(cache2, (void *)(chunk->sha1), (void *)chunk) == 0) {
       EXIT_TRACE("hashtable_insert failed");
     }
   } else {
-    // Cache hit: Skipping compression stage
+    // cache2 hit: Skipping compression stage
     chunk->compressed_data_ref = entry;
     mbuffer_free(&chunk->uncompressed_data);
   }
@@ -787,7 +789,7 @@ void *FragmentRefine(void * targs) {
 
 /* 
  * Integrate all computationally intensive pipeline
- * stages to improve cache efficiency.
+ * stages to improve cache2 efficiency.
  */
 void *SerialIntegratedPipeline(void * targs) {
   struct thread_args *args = (struct thread_args *)targs;
@@ -1231,7 +1233,7 @@ void *Fragment(void * targs){
  * Actions performed:
  *  - Receive chunks from compression and deduplication stage
  *  - Check sequence number of each chunk to determine correct order
- *  - Cache chunks that arrive out-of-order until predecessors are available
+ *  - cache2 chunks that arrive out-of-order until predecessors are available
  *  - Write chunks in-order to file (or preloading buffer)
  *
  * Notes:
@@ -1303,7 +1305,7 @@ void *Reorder(void * targs) {
       chunks_per_anchor[chunk->sequence.l1num] = chunk->sequence.l2num+1;
     }
 
-    //Put chunk into local cache if it's not next in the sequence 
+    //Put chunk into local cache2 if it's not next in the sequence 
     if(!sequence_eq(chunk->sequence, next)) {
       pos = TreeFind(chunk->sequence.l1num, T);
       if (pos == NULL) {
@@ -1330,11 +1332,11 @@ void *Reorder(void * targs) {
       sequence_inc_l2(&next);
       if(chunks_per_anchor[next.l1num]!=0 && next.l2num==chunks_per_anchor[next.l1num]) sequence_inc_l1(&next);
 
-      //Check whether we can write more chunks from cache
+      //Check whether we can write more chunks from cache2
       if(pos != NULL && (pos->Element.l1num == next.l1num)) {
         chunk = FindMin(pos->Element.queue);
         if(sequence_eq(chunk->sequence, next)) {
-          //Remove chunk from cache, update position for next iteration
+          //Remove chunk from cache2, update position for next iteration
           DeleteMin(pos->Element.queue);
           if(IsEmpty(pos->Element.queue)) {
             Destroy(pos->Element.queue);
@@ -1346,19 +1348,19 @@ void *Reorder(void * targs) {
           chunk = NULL;
         }
       } else {
-        //level 1 sequence number does not match or no chunks left in cache
+        //level 1 sequence number does not match or no chunks left in cache2
         chunk = NULL;
       }
     } while(chunk != NULL);
   }
 
-  //flush the blocks left in the cache to file
+  //flush the blocks left in the cache2 to file
   pos = TreeFindMin(T);
   while(pos !=NULL) {
     if(pos->Element.l1num == next.l1num) {
       chunk = FindMin(pos->Element.queue);
       if(sequence_eq(chunk->sequence, next)) {
-        //Remove chunk from cache, update position for next iteration
+        //Remove chunk from cache2, update position for next iteration
         DeleteMin(pos->Element.queue);
         if(IsEmpty(pos->Element.queue)) {
           Destroy(pos->Element.queue);
@@ -1416,9 +1418,9 @@ void Encode(config_t * _conf) {
   init_dedup_stats(&stats);
 #endif
 
-  //Create chunk cache
-  cache = hashtable_create(65536, hash_from_key_fn, keys_equal_fn, FALSE);
-  if(cache == NULL) {
+  //Create chunk cache2
+  cache2 = hashtable_create(65536, hash_from_key_fn, keys_equal_fn, FALSE);
+  if(cache2 == NULL) {
     printf("ERROR: Out of memory\n");
     exit(1);
   }
@@ -1643,7 +1645,7 @@ void Encode(config_t * _conf) {
 
   assert(!mbuffer_system_destroy());
 
-  hashtable_destroy(cache, TRUE);
+  hashtable_destroy(cache2, TRUE);
 
 #ifdef ENABLE_STATISTICS
   /* dest file stat */

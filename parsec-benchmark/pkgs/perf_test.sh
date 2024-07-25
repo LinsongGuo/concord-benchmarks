@@ -6,6 +6,7 @@ AD=100
 CUR_PATH=`pwd`
 SUB_DIR="${SUB_DIR:-""}"
 DIR=$CUR_PATH/parsec_stats/$SUB_DIR
+ACCURACY_DIR=$CUR_PATH/accuracy/$SUB_DIR
 #CLOCK=1 #0 - predictive, 1 - instantaneous
 THREADS="${THREADS:-"1"}"
 
@@ -97,9 +98,9 @@ get_time() {
       ;;
       fluidanimate)
         cd fluidanimate/src > /dev/null
-        $ts $prefix ./fluidanimate$suffix $threads 5 ../inputs/in_300K.fluid out.fluid > $OUT_FILE
+        $ts $prefix ./fluidanimate$suffix $threads 2 ../inputs/in_300K.fluid out.fluid > $OUT_FILE
         sleep 0.5
-        echo "$ts $prefix ./fluidanimate$suffix $threads 5 ../inputs/in_300K.fluid out.fluid > $OUT_FILE" >> $DEBUG_FILE
+        echo "$ts $prefix ./fluidanimate$suffix $threads 2 ../inputs/in_300K.fluid out.fluid > $OUT_FILE" >> $DEBUG_FILE
         cd - > /dev/null
       ;;
       swaptions) 
@@ -220,8 +221,8 @@ perf_test() {
       echo -e "$thread, $lc_naive_time (lc-naive)" >> $LOG_FILE
       naive_time_thr1=$lc_naive_time
 
-      ACCURACY_FILE="$DIR/accuracy-$bench.txt"
-      cp ${CONCORD_TIMESTAMP_PATH} $ACCURACY_FILE
+      ACCURACY_FILE="$ACCURACY_DIR/$bench"
+      mv ${CONCORD_TIMESTAMP_PATH} $ACCURACY_FILE
       # rm ${CONCORD_TIMESTAMP_PATH}
     done
     sleep 1
@@ -255,6 +256,7 @@ echo "Configured values:-"
 echo "Commit interval: $CI, Push Interval: $PI, Number of runs: $RUNS, Allowed deviation: $AD, Threads: $THREADS"
 echo "Usage: ./perf_test_libfiber <nothing / space separated list of parsec benchmarks>"
 mkdir -p $DIR
+mkdir -p $ACCURACY_DIR
 if [ $# -eq 0 ]; then
   run_perf_test
 else

@@ -209,6 +209,8 @@ typedef struct {
   int verbose;
 } config_t;
 
+extern config_t * conf;
+
 #define COMPRESS_GZIP 0
 #define COMPRESS_BZIP2 1
 #define COMPRESS_NONE 2

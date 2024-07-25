@@ -4,11 +4,12 @@ RUNS="${RUNS:-3}"
 CUR_PATH=`pwd`
 SUB_DIR="${SUB_DIR:-""}"
 DIR=$CUR_PATH/splash2_stats/$SUB_DIR
+ACCURACY_DIR=$CUR_PATH/accuracy/$SUB_DIR
 THREADS="${THREADS:-"1"}"
 
-export CC="${CC:-"clang-9"}"
-export OPT="${OPT:-"opt-9"}"
-export LLVM_LINK="${LLVM_LINK:-"llvm-link-9"}"
+export CC="${CC:-"clang-11"}"
+export OPT="${OPT:-"opt-11"}"
+export LLVM_LINK="${LLVM_LINK:-"llvm-link-11"}"
 
 UNROLL_COUNT="${UNROLL_COUNT:-"0"}"
 ACCURACY_TEST="${ACCURACY_TEST:-"1"}"
@@ -254,9 +255,9 @@ perf_test() {
       echo -e "$thread, $lc_naive_time (lc-naive)" >> $LOG_FILE
       naive_time_thr1=$lc_naive_time
 
-      ACCURACY_FILE="$DIR/accuracy-$bench.txt"
-      echo "ACCURACY_FILE: $ACCURACY_FILE" >> $LOG_FILE
-      cp ${CONCORD_TIMESTAMP_PATH} $ACCURACY_FILE
+      ACCURACY_FILE="$ACCURACY_DIR/$bench"
+      echo "ACCURACY_FILE: ${ACCURACY_FILE}" >> $LOG_FILE
+      mv ${CONCORD_TIMESTAMP_PATH} ${ACCURACY_FILE}
       # rm ${CONCORD_TIMESTAMP_PATH}
     done
 
@@ -296,6 +297,7 @@ rm -f $LOG_FILE $DEBUG_FILE $BUILD_ERROR_FILE $BUILD_DEBUG_FILE
 echo "Configured values:-"
 echo "Usage: ./perf_test_libfiber <nothing / space separated list of splash2 benchmarks>"
 mkdir -p $DIR
+mkdir -p $ACCURACY_DIR
 if [ $# -eq 0 ]; then
   run_perf_test
 else

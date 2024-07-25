@@ -47,24 +47,24 @@ fluidcmp: fluidcmp.cpp
 	$(CXX) $(CXXFLAGS) fluidcmp.cpp -o fluidcmp
 
 $(INTERMEDIATE_FILES): llvm_%.ll : %.cpp
-	clang++-9 $(PARSEC_FLAGS) $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(EXTRA_FLAGS) -S -emit-llvm -o $@ $<
+	clang++-11 $(PARSEC_FLAGS) $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(EXTRA_FLAGS) -S -emit-llvm -o $@ $<
 
 fluidanimate_llvm_all.ll: $(INTERMEDIATE_FILES)
-	llvm-link-9 $^ -o $@
+	llvm-link-11 $^ -o $@
 
 fluidanimate_llvm_opt.ll: fluidanimate_llvm_all.ll
-	opt-9 $(OPT_FLAGS) -S $^ -o $@
+	opt-11 $(OPT_FLAGS) -S $^ -o $@
 
 ifeq ($(UINTR),1)
 fluidanimate_llvm_ci.ll: fluidanimate_llvm_opt.ll
 	cp $< $@
 else
 fluidanimate_llvm_ci.ll: fluidanimate_llvm_opt.ll
-	opt-9 $(CI_PASS_OPT) < $< > $@
+	opt-11 $(CI_PASS_OPT) < $< > $@
 endif
 
 $(LLVM_TARGET): fluidanimate_llvm_ci.ll
-	clang++-9 $(PARSEC_FLAGS) $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(EXTRA_FLAGS) -o $@ $^
+	clang++-11 $(PARSEC_FLAGS) $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(EXTRA_FLAGS) -o $@ $^
 
 install_llvm:
 	mkdir -p $(LOCAL_PATH)/bin

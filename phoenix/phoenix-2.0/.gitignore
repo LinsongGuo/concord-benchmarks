@@ -7,9 +7,7 @@ kmeans
 linear_regression
 matrix_multiply
 pca
-reverse_index
 string_match
-word_count
 matrix_file_A.txt
 matrix_file_B.txt
 out
