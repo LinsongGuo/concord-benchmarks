@@ -28,6 +28,8 @@ run
 pkgs/parsec_stats/
 pkgs/splash2_stats/
 pkgs/*/*/*/*out*
+!pkgs/apps/swaptions/src/nr_routines.h
+!pkgs/apps/swaptions/src/nr_routines.c
 config.log
 
 # Ignore large input and outputfiles
