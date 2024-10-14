@@ -49,7 +49,7 @@ def run_bench(bench_category, bench_name, accuracy=0, pass_type="cache"):
         runs = 55
     elif bench_name in ['fluidanimate', 'dedup', 'streamcluster', 'word_count', 'reverse_index', 'kmeans', 'pca', 'fmm', 'histogram', 'string_match', 'water-nsquared', 'water-spatial', 'ocean-ncp', 'volrend', 'cholesky']:
         runs = 29
-    if bench_name == 'canneal':
+    elif bench_name == 'canneal':
         runs = 11
     else: 
         runs = 5
