@@ -2,20 +2,20 @@ import subprocess
 import os
 import csv
 import re
+import sys
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 unroll_configs = {}
-# overhead_results = "overhead_results-uintr.txt"
-overhead_results = "overhead_results-concord.txt"
-# overhead_results = "overhead_results-signal-lu-c.txt"
-# overhead_results = "overhead_results-concord-test.txt"
+overhead_results = "overhead_results.txt"
+if len(sys.argv) > 1:
+    overhead_results = sys.argv[1]
+
 benchs = [
     {
         "name": "splash2",
         "path": "splash2/codes/",
-        # "benchs": ["fmm"]
-        # "ocean-ncp",
+        # "benchs": ["water-nsquared"]
         "benchs": ["water-nsquared", "water-spatial", "ocean-cp",  "volrend", "fmm", "raytrace", "radix", "fft", "lu-c", "lu-nc", "cholesky", "radiosity"]
     },
     {
@@ -27,7 +27,7 @@ benchs = [
     {
         "name": "parsec",
         "path": "parsec-benchmark/pkgs/",
-        # "benchs":  [ "fluidanimate"]
+        # "benchs":  [ "swaptions"]
         "benchs": ["blackscholes", "fluidanimate", "swaptions", "canneal", "streamcluster"]
     }
 ]
