@@ -75,7 +75,7 @@
 
 #define DEFAULT_NUM_REDUCE_TASKS    256
 #define EXTENDED_NUM_REDUCE_TASKS   (DEFAULT_NUM_REDUCE_TASKS * 128)
-#define DEFAULT_CACHE_SIZE          (64 * 1024)
+#define DEFAULT_CACHE_SIZE          (32 * 1024)
 //#define DEFAULT_CACHE_SIZE        (8 * 1024)
 #define DEFAULT_KEYVAL_ARR_LEN      10
 #define DEFAULT_VALS_ARR_LEN        10
@@ -378,7 +378,7 @@ map_reduce (map_reduce_args_t * args)
     get_time (&end);
 
 #ifdef TIMING
-    fprintf (stderr, "library init: %u\n", time_diff (&end, &begin));
+    // fprintf (stderr, "library init: %u\n", time_diff (&end, &begin));
 #endif
 
     /* Run map tasks and get intermediate values. */
@@ -388,7 +388,7 @@ map_reduce (map_reduce_args_t * args)
 
 
 #ifdef TIMING
-    fprintf (stderr, "map phase: %u\n", time_diff (&end, &begin));
+    // fprintf (stderr, "map phase: %u\n", time_diff (&end, &begin));
 #endif
 
     dprintf("In scheduler, all map tasks are done, now scheduling reduce tasks\n");
@@ -401,7 +401,7 @@ map_reduce (map_reduce_args_t * args)
     
 
 #ifdef TIMING
-    fprintf (stderr, "reduce phase: %u\n", time_diff (&end, &begin));
+    // fprintf (stderr, "reduce phase: %u\n", time_diff (&end, &begin));
 #endif
 
     dprintf("In scheduler, all reduce tasks are done, now scheduling merge tasks\n");
@@ -412,7 +412,7 @@ map_reduce (map_reduce_args_t * args)
 
 
 #ifdef TIMING
-    fprintf (stderr, "merge phase: %u\n", time_diff (&end, &begin));
+    // fprintf (stderr, "merge phase: %u\n", time_diff (&end, &begin));
 #endif
 
     /* Cleanup. */
@@ -427,7 +427,7 @@ map_reduce (map_reduce_args_t * args)
     get_time (&end);
 
 #ifdef TIMING
-    fprintf (stderr, "library finalize: %u\n", time_diff (&end, &begin));
+    // fprintf (stderr, "library finalize: %u\n", time_diff (&end, &begin));
 #ifdef ORIG
     CHECK_ERROR (pthread_key_delete (emit_time_key));
 #else
@@ -755,24 +755,24 @@ start_workers (mr_env_t* env, thread_arg_t *th_arg)
     switch (task_type)
     {
         case TASK_TYPE_MAP:
-            fprintf (stderr, "map work time: %" PRIu64 "\n",
-                                        work_time / num_threads);
-            fprintf (stderr, "map user time: %" PRIu64 "\n", 
-                                        user_time / num_threads);
-            fprintf (stderr, "map combiner time: %" PRIu64 "\n", 
-                                        combiner_time / num_threads);
+            // fprintf (stderr, "map work time: %" PRIu64 "\n",
+            //                             work_time / num_threads);
+            // fprintf (stderr, "map user time: %" PRIu64 "\n", 
+            //                             user_time / num_threads);
+            // fprintf (stderr, "map combiner time: %" PRIu64 "\n", 
+            //                             combiner_time / num_threads);
             break;
 
         case TASK_TYPE_REDUCE:
-            fprintf (stderr, "reduce work time: %" PRIu64 "\n",
-                                        work_time / num_threads);
-            fprintf (stderr, "reduce user time: %" PRIu64 "\n", 
-                                        user_time / num_threads);
+            // fprintf (stderr, "reduce work time: %" PRIu64 "\n",
+            //                             work_time / num_threads);
+            // fprintf (stderr, "reduce user time: %" PRIu64 "\n", 
+            //                             user_time / num_threads);
             break;
 
         case TASK_TYPE_MERGE:
-            fprintf (stderr, "merge work time: %" PRIu64 "\n",
-                                        work_time / num_threads);
+            // fprintf (stderr, "merge work time: %" PRIu64 "\n",
+            //                             work_time / num_threads);
 
         default:
             break;

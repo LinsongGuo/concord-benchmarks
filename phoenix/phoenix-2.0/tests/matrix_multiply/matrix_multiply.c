@@ -38,12 +38,17 @@
 #include <time.h>
 #include <inttypes.h>
 #include <sys/time.h>
+#include <x86intrin.h>
+#include <immintrin.h>
 
 #include "map_reduce.h"
 #include "stddefines.h"
 #ifdef LIBFIBER
 #include "fiber_manager.h"
 #endif
+
+#include <m5_mmap.h>
+#include <concord.h>
 
 #ifdef LC
 /**************************************************** For Logical Clock ********************************************************/
@@ -201,7 +206,11 @@ void matrixmult_map(map_args_t *args)
 }
 
 int main(int argc, char *argv[]) {
+    m5op_addr = 0xFFFF0000;
+    map_m5_mem();
 
+    srand(139);
+    
 #if 0
     tlMasterClock = &masterClocks[0].clock;
 #endif
@@ -212,7 +221,6 @@ int main(int argc, char *argv[]) {
     final_data_t mm_vals;
     int i,j, create_files;
     int fd_A, fd_B, file_size;
-    char * fdata_A, *fdata_B;
     int matrix_len, row_block_len;
     struct stat finfo_A, finfo_B;
     char * fname_A, *fname_B;
@@ -238,33 +246,30 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    /* TODO: Make this configurable */
-    // fname_A = "//home/m8/clean-concord/CompilerInterrupts/local_home/exp_results/outputs/matrix_file_A.txt";
-    // fname_B = "//home/m8/clean-concord/CompilerInterrupts/local_home/exp_results/outputs/matrix_file_B.txt";
-    //fname_A = "/home/nbasu4/logicalclock/ci-llvm-v9/test-suite/phoenix/phoenix-2.0/tests/matrix_multiply/matrix_file_A.txt";
-    //fname_B = "/home/nbasu4/logicalclock/ci-llvm-v9/test-suite/phoenix/phoenix-2.0/tests/matrix_multiply/matrix_file_B.txt";
-    fname_A = "matrix_file_A.txt";
-    fname_B = "matrix_file_B.txt";
+
+    fname_A = "matrix_file_x.txt";
+    fname_B = "matrix_file_y.txt";
     CHECK_ERROR ( (matrix_len = atoi(argv[1])) < 0);
     file_size = ((matrix_len*matrix_len))*sizeof(int);
 
-    fprintf(stderr, "***** file size is %d\n", file_size);
+    // fprintf(stderr, "***** file size is %d\n", file_size);
 
     if(argv[2] == NULL)
         row_block_len = 1;
     else
         CHECK_ERROR ( (row_block_len = atoi(argv[2])) < 0);
-
+/*
+    char * fdata_A, *fdata_B;
     if(argv[3] != NULL)
         create_files = 1;
     else
         create_files = 0;
 
-    printf("MatrixMult: Side of the matrix is %d\n", matrix_len);
-    printf("MatrixMult: Row Block Len is %d\n", row_block_len);
-    printf("MatrixMult: Running...\n");
+    // printf("MatrixMult: Side of the matrix is %d\n", matrix_len);
+    // printf("MatrixMult: Row Block Len is %d\n", row_block_len);
+    // printf("MatrixMult: Running...\n");
 
-    /* If the matrix files do not exist, create them */
+    // If the matrix files do not exist, create them
     if(create_files)
     {
         dprintf("Creating files\n");
@@ -333,6 +338,27 @@ int main(int argc, char *argv[]) {
     ret = read (fd_B, fdata_B, file_size);
     CHECK_ERROR (ret != file_size);
 #endif
+*/
+
+    int *fdata_A, *fdata_B;
+    int current = 0;
+    fdata_A = (int *)malloc (file_size);
+    for(i=0;i<matrix_len;i++)
+        {
+            for(j=0;j<matrix_len;j++)
+            {
+                fdata_A[current++] = (rand())%11;
+            }
+        }
+    current = 0;
+    fdata_B = (int *)malloc (file_size);
+      for(i=0;i<matrix_len;i++)
+        {
+            for(j=0;j<matrix_len;j++)
+            {
+                fdata_B[current++] = (rand())%11;
+            }
+        }
 
     // Setup splitter args
     mm_data_t mm_data;
@@ -364,28 +390,56 @@ int main(int argc, char *argv[]) {
     map_reduce_args.partition = NULL; // use default
     map_reduce_args.result = &mm_vals;
     map_reduce_args.data_size = file_size;
-    map_reduce_args.L1_cache_size = atoi(GETENV("MR_L1CACHESIZE"));//1024 * 8;
-    map_reduce_args.num_map_threads = atoi(GETENV("MR_NUMTHREADS"));//8;
-    map_reduce_args.num_reduce_threads = atoi(GETENV("MR_NUMTHREADS"));//16;
-    map_reduce_args.num_merge_threads = atoi(GETENV("MR_NUMTHREADS"));//8;
-    map_reduce_args.num_procs = atoi(GETENV("MR_NUMPROCS"));//16;
-    map_reduce_args.key_match_factor = (float)atof(GETENV("MR_KEYMATCHFACTOR"));//2;
+    // map_reduce_args.L1_cache_size = atoi(GETENV("MR_L1CACHESIZE"));//1024 * 8;
+    // map_reduce_args.num_map_threads = atoi(GETENV("MR_NUMTHREADS"));//8;
+    // map_reduce_args.num_reduce_threads = atoi(GETENV("MR_NUMTHREADS"));//16;
+    // map_reduce_args.num_merge_threads = atoi(GETENV("MR_NUMTHREADS"));//8;
+    // map_reduce_args.num_procs = atoi(GETENV("MR_NUMPROCS"));//16;
+    // map_reduce_args.key_match_factor = (float)atof(GETENV("MR_KEYMATCHFACTOR"));//2;
 
-    fprintf(stderr, "***** data size is %" PRIdPTR "\n", (intptr_t)map_reduce_args.data_size);
-    printf("MatrixMult: Calling MapReduce Scheduler Matrix Multiplication\n");
+    map_reduce_args.L1_cache_size = 0;
+    map_reduce_args.num_map_threads = 1;
+    map_reduce_args.num_reduce_threads = 1;
+    map_reduce_args.num_merge_threads = 1;
+    map_reduce_args.num_procs = 0;
+    map_reduce_args.key_match_factor = 0;
+
+    // fprintf(stderr, "map_reduce_args.L1_cache_size: %d\n", map_reduce_args.L1_cache_size);
+    // fprintf(stderr, "map_reduce_args.num_map_threads: %d\n", map_reduce_args.num_map_threads);
+    // fprintf(stderr, "map_reduce_args.num_reduce_threads: %d\n", map_reduce_args.num_reduce_threads);
+    // fprintf(stderr, "map_reduce_args.num_merge_threads: %d\n", map_reduce_args.num_merge_threads);
+    // fprintf(stderr, "map_reduce_args.num_procs: %d\n", map_reduce_args.num_procs);
+    // fprintf(stderr, "map_reduce_args.key_match_factor: %d\n", map_reduce_args.key_match_factor);
+    
+    // fprintf(stderr, "***** data size is %" PRIdPTR "\n", (intptr_t)map_reduce_args.data_size);
+    // printf("MatrixMult: Calling MapReduce Scheduler Matrix Multiplication\n");
 
     get_time (&end);
 
 #ifdef TIMING
-    fprintf (stderr, "initialize: %u\n", time_diff (&end, &begin));
+    // fprintf (stderr, "initialize: %u\n", time_diff (&end, &begin));
 #endif
 
+    long long switch_end_tsc = __rdtsc() + 8500000;
+    m5_switch_cpu_addr();
+    while(__rdtsc() < switch_end_tsc);
+    
+    preempt_start();
+
     get_time (&begin);
+    long long start_tsc = __rdtsc();
     CHECK_ERROR (map_reduce (&map_reduce_args) < 0);
+    long long end_tsc = __rdtsc();
     get_time (&end);
 
+    preempt_end();
+
+    m5_switch_cpu_addr();
+    
 #ifdef TIMING
+    fprintf (stderr, "library(tsc): %lld\n", end_tsc - start_tsc);
     fprintf (stderr, "library: %u\n", time_diff (&end, &begin));
+    // fprintf (stderr, "res: %d\n", res);
 #endif
 
     get_time (&begin);
@@ -394,19 +448,20 @@ int main(int argc, char *argv[]) {
 
     //dprintf("\n");
     //dprintf("The length of the final output is %d\n",mm_vals.length );
-    int sum = 0;
-    for(i=0;i<matrix_len*matrix_len;i++)
-    {
-          sum += mm_data.output[i];
-    }
-    dprintf ("MatrixMult: total sum is %d\n", sum);
+    // int sum = 0;
+    // for(i=0;i<matrix_len*matrix_len;i++)
+    // {
+    //       sum += mm_data.output[i];
+    // }
+    // dprintf ("MatrixMult: total sum is %d\n", sum);
     //dprintf("\n");
 
-    dprintf("MatrixMult: MapReduce Completed\n");
+    // dprintf("MatrixMult: MapReduce Completed\n");
 
     free(mm_vals.data);
     free(mm_data.output);
 
+/*
 #ifndef NO_MMAP
     CHECK_ERROR(munmap(fdata_A, file_size + 1) < 0);
 #else
@@ -420,16 +475,17 @@ int main(int argc, char *argv[]) {
     free (fdata_B);
 #endif
     CHECK_ERROR(close(fd_B) < 0);
+*/
 
     get_time (&end);
 
 #ifdef TIMING
-    fprintf (stderr, "finalize: %u\n", time_diff (&end, &begin));
+    // fprintf (stderr, "finalize: %u\n", time_diff (&end, &begin));
 #endif
 
     get_time (&rt_end);
     run_time = time_diff (&rt_end, &rt_begin);
-    printf("matrix_multiply runtime: %lu usec\n", run_time);
+    // printf("matrix_multiply runtime: %lu usec\n", run_time);
     print_timing_stats();
     return 0;
 }

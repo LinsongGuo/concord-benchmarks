@@ -43,6 +43,9 @@ else
 CONCORD_LIB = ${CONCORD_LIB_PATH}/concord_accuracy.a -Wl,--wrap=pthread_create
 endif
 
+M5_INC = -I${CONCORD_LIB_PATH}/../../m5/src
+M5_LIB = ${CONCORD_LIB_PATH}/../../m5/libm5.a
+
 ifeq ($(CONCORD_PASS_TYPE),rdtsc)
 $(info Building with rdtsc pass)
 CONCORD_PASS = ${CONCORD_SRC_PATH}/rdtsc-pass/build/src/libConcordPass.so
@@ -137,9 +140,9 @@ CI_HOME = $(shell pwd)/../../../#w.r.t src directory
 EXTRA_FLAGS ?=
 CFLAGS += $(EXTRA_FLAGS)
 #CFLAGS += -g $(EXTRA_FLAGS) -I$(CI_HOME) -I$(CI_LIB_HOME)
-CFLAGS += -I$(CI_LIB_HOME)/src -I$(CI_HOME) -I$(CI_LIB_HOME)/../src -I$(CI_HOME)/../
+CFLAGS += -I${CONCORD_LIB_PATH} ${M5_INC} -I$(CI_LIB_HOME)/src -I$(CI_HOME) -I$(CI_LIB_HOME)/../src -I$(CI_HOME)/../
 
-LIBS +=  -Wl,-rpath=./$(LIB_DIR)/ -L$(CI_LIB_HOME)/../lib/ -Wl,-rpath=$(CI_LIB_HOME)/../lib/ $(EXTRA_LD_FLAGS) $(CONCORD_LIB)
+LIBS +=  -Wl,-rpath=./$(LIB_DIR)/ -L$(CI_LIB_HOME)/../lib/ -Wl,-rpath=$(CI_LIB_HOME)/../lib/ $(EXTRA_LD_FLAGS) $(CONCORD_LIB) $(M5_LIB)
 #LDFLAGS := -lm -static -lpapi
 #disable-verify
 LC_FLAGS = $(CONCORD_PASS_OPT) 
