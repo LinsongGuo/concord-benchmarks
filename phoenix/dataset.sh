@@ -1,0 +1,1 @@
+tar -xzf phoenix-input.tar.gz
