@@ -337,10 +337,10 @@ clean-binPROGRAMS:
 
 bodytrack$(EXEEXT): bodytrack_all.ll 
 	@rm -f bodytrack$(EXEEXT)
-	clang++-9 $(CXXFLAGS) -o $@ $(bodytrack_llvm_OBJECTS) $(bodytrack_LDADD) $(LIBS)
+	clang++-11 $(CXXFLAGS) -o $@ $(bodytrack_llvm_OBJECTS) $(bodytrack_LDADD) $(LIBS)
 
 bodytrack_all.ll: $(bodytrack_llvm_OBJECTS) $(bodytrack_DEPENDENCIES) 
-	llvm-link-9 -o $@ $(bodytrack_llvm_OBJECTS) $(bodytrack_LDADD) $(LIBS)
+	llvm-link-11 -o $@ $(bodytrack_llvm_OBJECTS) $(bodytrack_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -375,10 +375,10 @@ include ./$(DEPDIR)/main.Po
 	mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po";
 
 .cpp.ll: 
-	clang++-9 $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(CXXFLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -S -emit-llvm -c $< -o $@; \
+	clang++-11 $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(CXXFLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -S -emit-llvm -c $< -o $@; \
 
 $(bodytrack_llvm_OBJECTS): llvm_%.ll: $.ll
-	opt-9 $(OPT_FLAGS) -S $^ -o $@
+	opt-11 $(OPT_FLAGS) -S $^ -o $@
 
 .cpp.obj:
 	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ `$(CYGPATH_W) '$<'`; \

@@ -11,6 +11,7 @@ export CC="${CC:-"clang-11"}"
 export OPT="${OPT:-"opt-11"}"
 export LLVM_LINK="${LLVM_LINK:-"llvm-link-11"}"
 
+NOT_CONCORD="${NOT_CONCORD:-"1"}"
 UNROLL_COUNT="${UNROLL_COUNT:-"0"}"
 ACCURACY_TEST="${ACCURACY_TEST:-"1"}"
 CONCORD_PASS_TYPE="${CONCORD_PASS_TYPE:-"cache"}"
@@ -245,7 +246,7 @@ perf_test() {
     #4. Build original program with Naive CI
     echo "Building original program with Naive CI: " | tee -a $DEBUG_FILE $BUILD_DEBUG_FILE $BUILD_ERROR_FILE >/dev/null
     BUILD_LOG=$BUILD_DEBUG_FILE ERROR_LOG=$BUILD_ERROR_FILE make -f Makefile.lc $bench-clean
-    UINTR=0 ACCURACY_TEST=$ACCURACY_TEST CONCORD_PASS_TYPE=$CONCORD_PASS_TYPE UNROLL_COUNT=$UNROLL_COUNT BUILD_LOG=$BUILD_DEBUG_FILE ERROR_LOG=$BUILD_ERROR_FILE make -f Makefile.lc $bench
+    UINTR=$NOT_CONCORD ACCURACY_TEST=$ACCURACY_TEST CONCORD_PASS_TYPE=$CONCORD_PASS_TYPE UNROLL_COUNT=$UNROLL_COUNT BUILD_LOG=$BUILD_DEBUG_FILE ERROR_LOG=$BUILD_ERROR_FILE make -f Makefile.lc $bench
     for thread in $THREADS
     do
       PER_THREAD_STAT_FILE="$DIR/splash2-perf_stats-th$thread-ad$AD.txt"
@@ -257,7 +258,7 @@ perf_test() {
 
       ACCURACY_FILE="$ACCURACY_DIR/$bench"
       echo "ACCURACY_FILE: ${ACCURACY_FILE}" >> $LOG_FILE
-      mv ${CONCORD_TIMESTAMP_PATH} ${ACCURACY_FILE}
+      # mv ${CONCORD_TIMESTAMP_PATH} ${ACCURACY_FILE}
       # rm ${CONCORD_TIMESTAMP_PATH}
     done
 

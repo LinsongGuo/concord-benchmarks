@@ -110,19 +110,19 @@ install:
 	mv $(PREFIX)/bin/$(benchmark_base) $(PREFIX)/bin/$(TARGET)
 
 $(OBJDIR)/%.ll : %.c
-	clang++-9 $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -S -emit-llvm -o $@ $<
+	clang++-11 $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -S -emit-llvm -o $@ $<
 
 $(OBJDIR)/%.ll : %.cpp
-	clang++-9 $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -S -emit-llvm -o $@ $<
+	clang++-11 $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -S -emit-llvm -o $@ $<
 
 $(OBJDIR)/llvm_objdir_all.ll: $(OBJDIR)/%.ll 
-	llvm-link-9 $^ -o $@
+	llvm-link-11 $^ -o $@
 
 $(OBJDIR)/llvm_objdir_opt.ll: $(OBJDIR)/llvm_objdir_all.ll
-	opt-9 $(OPT_FLAGS) -S $< -o $@
+	opt-11 $(OPT_FLAGS) -S $< -o $@
 
 $(tools_tgt): $(BINDIR)/% : $(OBJDIR)/%.ll $(LIBDIR)/libcass.a
-	clang++-9 $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -S emit-llvm -o $@ $^
+	clang++-11 $(PARSEC_FLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -S emit-llvm -o $@ $^
 
 $(benchmark_tgt): $(BINDIR)/% : $(OBJDIR)/%.o $(LIBDIR)/libcass.a $(LIBDIR)/libcassimage.a
 	$(CXX) $(CFLAGS) $(LDFLAGS) $^ -o $@ $(LDLIBS)

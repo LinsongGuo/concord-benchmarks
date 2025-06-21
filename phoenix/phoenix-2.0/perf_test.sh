@@ -8,6 +8,7 @@ DIR=$CUR_PATH/phoenix_stats/$SUB_DIR
 ACCURACY_DIR=$CUR_PATH/accuracy/$SUB_DIR
 THREADS="${THREADS:-"1"}"
 
+NOT_CONCORD="${NOT_CONCORD:-"1"}"
 UNROLL_COUNT="${UNROLL_COUNT:-"0"}"
 ACCURACY_TEST="${ACCURACY_TEST:-"1"}"
 CONCORD_PASS_TYPE="${CONCORD_PASS_TYPE:-"rdtsc"}"
@@ -16,7 +17,7 @@ dry_run() {
   # Dry run - so that any disk caching does not hamper the process
   case "$1" in
     histogram)
-      command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/large.bmp > /dev/null 2>&1"
+      command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program ../phoenix-input/${program}_datafiles/large.bmp > /dev/null 2>&1"
     ;;
     kmeans)
       command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program -d 100 -c 10 -p 500000 -s 50 > /dev/null 2>&1"
@@ -25,22 +26,22 @@ dry_run() {
       command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program -r 1000 -c 1000 -s 1000 > /dev/null 2>&1"
     ;;
     string_match)
-      command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/key_file_100MB.txt > /dev/null 2>&1"
+      command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program ../phoenix-input/${program}_datafiles/key_file_100MB.txt > /dev/null 2>&1"
     ;;
     linear_regression)
-      command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/key_file_500MB.txt > /dev/null 2>&1"
+      command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program ../phoenix-input/${program}_datafiles/key_file_500MB.txt > /dev/null 2>&1"
     ;;
     linear_regression-seq)
-      command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/key_file_500MB.txt > /dev/null 2>&1"
+      command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program ../phoenix-input/${program}_datafiles/key_file_500MB.txt > /dev/null 2>&1"
     ;;
     word_count)
-      command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/word_50MB.txt > /dev/null 2>&1"
+      command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program ../phoenix-input/${program}_datafiles/word_50MB.txt > /dev/null 2>&1"
     ;;
     matrix_multiply)
       command="MR_NUMTHREADS=1 timeout 5m ./tests/$program/$program 1000 100 0 > /dev/null 2>&1"
     ;;
     reverse_index)
-      command="MR_NUMTHREADS=1 $ts timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/www.stanford.edu/dept/news/ > /dev/null 2>&1"
+      command="MR_NUMTHREADS=1 $ts timeout 5m ./tests/$program/$program ../phoenix-input/${program}_datafiles/www.stanford.edu/dept/news/ > /dev/null 2>&1"
     ;;
   esac
   echo "Dry run: "$command >> $DEBUG_FILE
@@ -66,7 +67,7 @@ get_time() {
   do
     case "$program" in
       histogram)
-        command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/large.bmp > out 2>&1"
+        command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program ../phoenix-input/${program}_datafiles/large.bmp > out 2>&1"
       ;;
       kmeans)
         command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program -d 100 -c 10 -p 500000 -s 50 > out 2>&1"
@@ -75,19 +76,19 @@ get_time() {
         command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program -r 1000 -c 1000 -s 1000 > out 2>&1"
       ;;
       string_match)
-        command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/key_file_100MB.txt > out 2>&1"
+        command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program ../phoenix-input/${program}_datafiles/key_file_100MB.txt > out 2>&1"
       ;;
       linear_regression)
-        command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/key_file_500MB.txt > out 2>&1"
+        command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program ../phoenix-input/${program}_datafiles/key_file_500MB.txt > out 2>&1"
       ;;
       word_count)
-        command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/word_50MB.txt > out 2>&1"
+        command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program ../phoenix-input/${program}_datafiles/word_50MB.txt > out 2>&1"
       ;;
       matrix_multiply)
         command="MR_NUMTHREADS=$threads timeout 5m ./tests/$program/$program 1000 100 0 > out 2>&1"
       ;;
       reverse_index)
-        command="MR_NUMTHREADS=$threads $ts timeout 5m ./tests/$program/$program ../input_datasets/${program}_datafiles/www.stanford.edu/dept/news/ > out 2>&1"
+        command="MR_NUMTHREADS=$threads $ts timeout 5m ./tests/$program/$program ../phoenix-input/${program}_datafiles/www.stanford.edu/dept/news/ > out 2>&1"
       ;;
     esac
     echo $command >> $DEBUG_FILE
@@ -193,7 +194,7 @@ perf_test() {
   #run naive
   echo "Building naive program: " | tee -a $DEBUG_FILE
   make -f Makefile.lc clean >$BUILD_DEBUG_FILE 2>$BUILD_ERROR_FILE
-  UINTR=0 ACCURACY_TEST=$ACCURACY_TEST CONCORD_PASS_TYPE=$CONCORD_PASS_TYPE UNROLL_COUNT=$UNROLL_COUNT make -f Makefile.lc >$BUILD_DEBUG_FILE 2>$BUILD_ERROR_FILE
+  UINTR=$NOT_CONCORD ACCURACY_TEST=$ACCURACY_TEST CONCORD_PASS_TYPE=$CONCORD_PASS_TYPE UNROLL_COUNT=$UNROLL_COUNT make -f Makefile.lc >$BUILD_DEBUG_FILE 2>$BUILD_ERROR_FILE
   echo "Running naive program: " | tee -a $DEBUG_FILE
   for thread in $THREADS
   do
@@ -221,7 +222,7 @@ perf_test() {
       arr_index_naive=$((arr_index_naive+1))
 
       ACCURACY_FILE="$ACCURACY_DIR/$bench"
-      mv ${CONCORD_TIMESTAMP_PATH} $ACCURACY_FILE
+      # mv ${CONCORD_TIMESTAMP_PATH} $ACCURACY_FILE
       # rm ${CONCORD_TIMESTAMP_PATH}
     done
   done

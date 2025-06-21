@@ -10,6 +10,7 @@ ACCURACY_DIR=$CUR_PATH/accuracy/$SUB_DIR
 #CLOCK=1 #0 - predictive, 1 - instantaneous
 THREADS="${THREADS:-"1"}"
 
+NOT_CONCORD="${NOT_CONCORD:-"1"}"
 UNROLL_COUNT="${UNROLL_COUNT:-"2"}"
 ACCURACY_TEST="${ACCURACY_TEST:-"0"}"
 CONCORD_PASS_TYPE="${CONCORD_PASS_TYPE:-"cache"}"
@@ -75,7 +76,6 @@ get_time() {
   # fi
   prefix=""
   ts="taskset -c 4,6,8,10,12,14"
-  # ts="taskset -c 4,6"
   OUT_FILE="$DIR/out"
   SUM_FILE="$DIR/sum"
   MEDIAN_FILE="$DIR/median"
@@ -210,7 +210,7 @@ perf_test() {
     #4. Build original program with Naive CI
     echo "Building original program with Naive CI: " | tee -a $DEBUG_FILE $BUILD_DEBUG_FILE $BUILD_ERROR_FILE >/dev/null
     ACCURACY_TEST=$ACCURACY_TEST CONCORD_PASS_TYPE=$CONCORD_PASS_TYPE UNROLL_COUNT=$UNROLL_COUNT BUILD_LOG=$BUILD_DEBUG_FILE ERROR_LOG=$BUILD_ERROR_FILE make -f Makefile.ci ${bench}-clean
-    UINTR=0 ACCURACY_TEST=$ACCURACY_TEST CONCORD_PASS_TYPE=$CONCORD_PASS_TYPE UNROLL_COUNT=$UNROLL_COUNT BUILD_LOG=$BUILD_DEBUG_FILE ERROR_LOG=$BUILD_ERROR_FILE PROFILE_FLAGS="-DAVG_STATS" make -f Makefile.ci ${bench}
+    UINTR=$NOT_CONCORD ACCURACY_TEST=$ACCURACY_TEST CONCORD_PASS_TYPE=$CONCORD_PASS_TYPE UNROLL_COUNT=$UNROLL_COUNT BUILD_LOG=$BUILD_DEBUG_FILE ERROR_LOG=$BUILD_ERROR_FILE PROFILE_FLAGS="-DAVG_STATS" make -f Makefile.ci ${bench}
     for thread in $THREADS
     do
       PER_THREAD_STAT_FILE="$DIR/parsec-perf_stats-th$thread-ad$AD.txt"
@@ -222,7 +222,7 @@ perf_test() {
       naive_time_thr1=$lc_naive_time
 
       ACCURACY_FILE="$ACCURACY_DIR/$bench"
-      mv ${CONCORD_TIMESTAMP_PATH} $ACCURACY_FILE
+      # mv ${CONCORD_TIMESTAMP_PATH} $ACCURACY_FILE
       # rm ${CONCORD_TIMESTAMP_PATH}
     done
     sleep 1

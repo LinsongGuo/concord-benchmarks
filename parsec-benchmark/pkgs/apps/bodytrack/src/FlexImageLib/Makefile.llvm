@@ -310,10 +310,10 @@ include ./$(DEPDIR)/FlexImage.Plo
 	g++ $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(CXXFLAGS) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c $< -o $*.o >/dev/null 2>&1; \
 
 .cpp.ll: 
-	clang++-9 $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(CXXFLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -S -emit-llvm -c $< -o $@; \
+	clang++-11 $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(CXXFLAGS) $(EXTRA_FLAGS) $(PAPI_FLAGS) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -S -emit-llvm -c $< -o $@; \
 
 $(libflex_llvm_la_OBJECTS): llvm_%.ll: %.ll
-	opt-9 $(OPT_FLAGS) -S $^ -o $@; \
+	opt-11 $(OPT_FLAGS) -S $^ -o $@; \
 
 
 makedir-libtool:

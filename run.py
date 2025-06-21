@@ -7,27 +7,29 @@ import sys
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 unroll_configs = {}
+mechanism = None
 overhead_results = "overhead_results.txt"
-if len(sys.argv) > 1:
-    overhead_results = sys.argv[1]
+if len(sys.argv) > 2:
+    mechanism = sys.argv[1]
+    overhead_results = sys.argv[2]
+else:
+    print("At least two arguments")
+    exit(-1)
 
 benchs = [
     {
         "name": "splash2",
         "path": "splash2/codes/",
-        # "benchs": ["water-nsquared"]
         "benchs": ["water-nsquared", "water-spatial", "ocean-cp",  "volrend", "fmm", "raytrace", "radix", "fft", "lu-c", "lu-nc", "cholesky", "radiosity"]
     },
     {
         "name": "phoenix",
         "path": "phoenix/phoenix-2.0/",
-        # "benchs": ["kmeans"]
         "benchs": ["histogram", "kmeans", "pca", "string_match", "linear_regression", "word_count", "matrix_multiply", "reverse_index"]
     },
     {
         "name": "parsec",
         "path": "parsec-benchmark/pkgs/",
-        # "benchs":  [ "swaptions"]
         "benchs": ["blackscholes", "fluidanimate", "swaptions", "canneal", "streamcluster"]
     }
 ]
@@ -53,8 +55,12 @@ def run_bench(bench_category, bench_name, accuracy=0, pass_type="cache"):
         runs = 11
     else: 
         runs = 5
+
+    # To save time, uncomment the following line to run each benchmark program only once.
     # runs = 1
+
     cmd = f" RUNS={1 if accuracy else runs } \
+                                        NOT_CONCORD={0 if mechanism == 'concord' else 1} \
                                         MODIFIED_SUBLOOP_COUNT={int(unroll_configs[bench_name][1])} \
                                         UNROLL_COUNT={int(unroll_configs[bench_name][0])} \
                                         ACCURACY_TEST={accuracy} CONCORD_PASS_TYPE={pass_type} \
@@ -99,13 +105,6 @@ if __name__ == "__main__":
     print("=================================")
 
     load_configs()
-
-    print(unroll_configs)
-
-    if not os.path.exists("results"):
-        os.mkdir("results")
-
-    # run_category(benchs[0], timeliness=True, overhead=False)
 
     run_category(benchs[0], timeliness=False, overhead=True)
     run_category(benchs[1], timeliness=False, overhead=True)

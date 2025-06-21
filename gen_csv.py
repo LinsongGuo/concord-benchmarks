@@ -2,10 +2,10 @@ import pandas as pd
 
 uintr_file = 'overhead_results-uintr.txt'
 concord_file = 'overhead_results-concord.txt'
-concord_default_file = 'overhead_results-concord-default.txt'
+signal_file = 'overhead_results-signal.txt'
 
-quantum = [100, 50, 30, 20, 15, 10, 5, 2]
-N = 27
+quantum = [200, 100, 50, 30, 20, 15, 10, 5, 3]
+N = 25
 
 data = {}
 
@@ -30,7 +30,7 @@ def read_overhead(mode, mode_file):
             if not line.strip():
                 continue
             if '=====' in line:
-                break
+                continue
          
             words = line.split(',')
             o = 'error' if 'error' in words[2] else '{:.2f}%'.format((float(words[2]) - 1)*100)
@@ -46,13 +46,13 @@ def get_order():
     for q in quantum:
         order.append('uintr {}'.format(q))    
         order.append('concord {}'.format(q))
-        order.append('concord-default {}'.format(q))
+        order.append('signal {}'.format(q))
     return order
 
 read_benchmarks()
-read_overhead('concord-default', concord_default_file)
-read_overhead('concord', concord_file)
 read_overhead('uintr', uintr_file)
+read_overhead('concord', concord_file)
+read_overhead('signal', signal_file)
 
 for d in data:
     print(d, len(data[d]), data[d])
@@ -60,4 +60,4 @@ for d in data:
 order = get_order()
 print('order:', order)
 df = pd.DataFrame(data)
-df.to_csv('all3.csv', index=False)
+df.to_csv('all.csv', index=False)

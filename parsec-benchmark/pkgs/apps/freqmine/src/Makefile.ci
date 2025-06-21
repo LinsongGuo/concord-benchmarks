@@ -56,20 +56,20 @@ fp_node.o: fp_node.cpp fp_node.h fsout.h common.h
 
 
 $(INTERMEDIATE_FILES): llvm_%.ll : %.cpp
-	clang++-9 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(EXTRA_FLAGS) -S -emit-llvm -o $@ $<
+	clang++-11 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(EXTRA_FLAGS) -S -emit-llvm -o $@ $<
 
 freqmine_llvm_all.ll: $(INTERMEDIATE_FILES)
-	llvm-link-9 $^ -o $@
+	llvm-link-11 $^ -o $@
 
 freqmine_llvm_opt.ll: freqmine_llvm_all.ll
-	opt-9 $(OPT_FLAGS) -S $^ -o $@
+	opt-11 $(OPT_FLAGS) -S $^ -o $@
 
 freqmine_llvm_ci.ll: freqmine_llvm_opt.ll
 	cp $< $@
-	# opt-9 $(CI_PASS_OPT) < $< > $@
+	# opt-11 $(CI_PASS_OPT) < $< > $@
 
 $(LLVM_TARGET): freqmine_llvm_ci.ll
-	clang++-9 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(EXTRA_FLAGS) -o $@ $^
+	clang++-11 $(CXXFLAGS_LLVM) $(LDFLAGS) $(LIBS) $(EXTRA_FLAGS) -o $@ $^
 
 clean:
 	rm -f *.o $(TARGET) $(LLVM_TARGET) *.ll
